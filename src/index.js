@@ -1,20 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Link, Switch, BrowserRouter } from 'react-router-dom';
 import './index.css';
-import App from './components/app/App';
+import App from './components/app/App.jsx';
 import Login from './components/login/Login.jsx';
+import Register from './components/register/Register.jsx';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios'
+
 
 const routing = (
-    <Router>
-        <div>
+    <BrowserRouter>
+        <Switch>
             <Route exact path='/' component={App} />
-            <Route exact path="/login" component={Login} />
-        </div>
-    </Router>
+            <Route exact path='/login' component={Login} />
+            <Route exact path='/register' component={Register} />
+        </Switch>
+    </BrowserRouter>
 )
 
 document.body.style.paddingTop = '30px';
