@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import './Dashboard.css';
 import axios from 'axios';
-import AuthHelperMethods from '../../helpers/AuthHelperMethods'
+import AuthHelperMethods from '../helpers/AuthHelperMethods'
 
-class App extends Component {
+class Dashboard extends Component {
     constructor(props) {
         super(props);
 
@@ -21,7 +20,8 @@ class App extends Component {
             this.props.history.replace('/login');
         } else {
             try {
-                console.log('Confirmation is ' + Auth.getConfirm());
+                Auth.getConfirm()
+                // console.log('Confirmation is ' + Auth.getConfirm());
 
                 this.setState({
                     loaded: true
@@ -36,11 +36,13 @@ class App extends Component {
 
     render() {
         if (this.state.loaded) {
-            return <div>Hello</div>
+            return (
+                <div>hello</div>
+            );
         } else {
             return null;
         }
     }
 }
 
-export default App;
+export default Dashboard;

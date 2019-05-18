@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar.jsx';
-import { Button, CssBaseline, FormControl, Grid, FormHelperText, IconButton, Input, InputAdornment, InputLabel, MenuItem, Paper, Select, Typography, Link } from '@material-ui/core';
+import { Button, CssBaseline, FormControl, Grid, IconButton, Input, InputAdornment, InputLabel, Link, Paper, Typography} from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import AuthHelperMethods from '../helpers/AuthHelperMethods.js';
