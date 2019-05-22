@@ -54,7 +54,7 @@ class Login extends Component {
             const { success } = res.data;
 
             if (success) {
-                this.props.history.push('/')
+                this.props.history.push('/dashboard')
             } else {
                 this.setState({ loginFailed: true });
             }

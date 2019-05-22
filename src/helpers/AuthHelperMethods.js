@@ -46,6 +46,7 @@ export default class AuthHelperMethods {
     isTokenExpired = (token) => {
         try {
             const decoded = decode(token);
+
             return decoded.exp < (Date.now() / 1000)
         } catch (err) {
             return false;
@@ -55,5 +56,22 @@ export default class AuthHelperMethods {
     getConfirm() {
         let token = decode(this.getToken());
         return token;
+    }
+
+    getUserData() {
+        if (!this.loggedIn()) return null;
+        const decoded = decode(this.getToken());
+        const { username } = decoded;
+
+        return axios('/user/data', {
+            method: 'GET',
+            params: {
+                username
+            }
+        })
+        .then(res => {
+            return res.data;
+        })
+        // decoded.username
     }
 }
