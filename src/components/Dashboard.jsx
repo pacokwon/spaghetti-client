@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { 
+import {
     AppBar,
     CssBaseline,
     Drawer,
@@ -13,7 +13,8 @@ import {
     Menu,
     MenuItem,
     Toolbar,
-    Typography 
+    Tooltip,
+    Typography
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -22,10 +23,11 @@ import StarRateIcon from '@material-ui/icons/StarRate'
 import WhatShotIcon from '@material-ui/icons/Whatshot'
 import LocalDiningIcon from '@material-ui/icons/LocalDining.js'
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import classNames from 'classnames';
 import AuthHelperMethods from '../helpers/AuthHelperMethods'
 import ProfileCard from './ProfileCard.jsx'
 import NearbyRestaurants from './NearbyRestaurants.jsx'
+import Browser from './Browser.jsx'
+import classNames from 'classnames';
 
 const drawerWidth = 240;
 
@@ -60,11 +62,11 @@ const styles = theme => ({
         })
     },
     drawerClose: {
+        width: theme.spacing.unit * 8 + 1,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         }),
-        width: theme.spacing.unit * 8 + 1,
     },
     menuButton: {
         marginLeft: 12,
@@ -101,7 +103,6 @@ class Dashboard extends React.Component {
     state = {
         open: false,
         anchorElement: null,
-        loaded: true,
     }
 
     componentDidMount() {
@@ -114,14 +115,12 @@ class Dashboard extends React.Component {
             try {
                 Auth.getConfirm()
 
-                this.setState({
-                    loaded: true
-                })
-
                 Auth.getUserData()
                 .then(res => {
                     this.setState({
-                        userData: res
+                        userData: res,
+                        contentElement: <NearbyRestaurants userdata={res} />,
+                        title: 'Welcome, ' + res.username
                     })
                 })
             } catch (e) {
@@ -159,6 +158,13 @@ class Dashboard extends React.Component {
 
     }
 
+    handleBrowseOpen = () => {
+        this.setState(prevState => ({
+            title: '',
+            contentElement: <Browser onCardClick={this.handleCardClick} />
+        }))
+    }
+
     handleProfileClick = () => {
         this.setState(prevState => ({
             title: 'Your Profile',
@@ -166,15 +172,20 @@ class Dashboard extends React.Component {
         }))
         this.handleMenuClose();
     }
-    
+
     handleLogoutClick = () => {
         this.props.history.push('/login')
     }
 
+    handleCardClick = (event, name) => {
+        console.log('hello');
+    }
+
     render() {
         const { classes } = this.props;
+        // userData --> object. has the keys: dormitory, name, username
         const { anchorElement, title, userData } = this.state;
-        
+
         const renderMenu = (
             <Menu
                 anchorEl={anchorElement}
@@ -187,7 +198,7 @@ class Dashboard extends React.Component {
             </Menu>
         );
 
-        if (this.state.loaded) {
+        if (userData) {
             return (
                 <div>
                     <CssBaseline />
@@ -205,7 +216,7 @@ class Dashboard extends React.Component {
                                     [classes.hide]: this.state.open,
                                 })}
                             >
-                                <MenuIcon />                            
+                                <MenuIcon />
                             </IconButton>
                             <Typography
                                 variant="h5"
@@ -215,6 +226,13 @@ class Dashboard extends React.Component {
                                 Hello
                             </Typography>
                             <span className={classes.rightSide}>
+                                <Typography
+                                    color="inherit"
+                                    variant="subheading"
+                                    className={classes.title}
+                                >
+                                    {userData.username}
+                                </Typography>
                                 <IconButton
                                     className={classes.icon}
                                     onClick={this.handleMenuOpen}
@@ -247,27 +265,53 @@ class Dashboard extends React.Component {
                         </div>
                         <Divider />
                         <List>
-                            <ListItem button key='home'>
-                                <ListItemIcon>
-                                    <HomeIcon
-                                        className={classes.icon}
-                                        onClick={this.handleHomeOpen}
-                                    />
-                                </ListItemIcon>
-                                <ListItemText primary='Home' />
-                            </ListItem>
-                            <ListItem button key='star'>
-                                <ListItemIcon><StarRateIcon className={classes.icon} /></ListItemIcon>
-                                <ListItemText primary='Rate' />
-                            </ListItem>
-                            <ListItem button key='whatshot'>
-                                <ListItemIcon><WhatShotIcon className={classes.icon} /></ListItemIcon>
-                                <ListItemText primary='Recommended' />
-                            </ListItem>
-                            <ListItem button key='local_dining'>
-                                <ListItemIcon><LocalDiningIcon className={classes.icon} /></ListItemIcon>
-                                <ListItemText primary='Look Around' />
-                            </ListItem>
+                            <Tooltip title='Home'>
+                                <ListItem
+                                    button
+                                    key='home'
+                                    onClick={this.handleHomeOpen}
+                                >
+                                    <ListItemIcon>
+                                        <HomeIcon
+                                            className={classes.icon}
+                                        />
+                                    </ListItemIcon>
+                                    <ListItemText primary='Home' />
+                                </ListItem>
+                            </Tooltip>
+                            <Tooltip title='Ratings'>
+                                <ListItem button key='star'>
+                                    <ListItemIcon>
+                                        <StarRateIcon className={classes.icon} />
+                                    </ListItemIcon>
+                                    <ListItemText primary='Ratings' />
+                                </ListItem>
+                            </Tooltip>
+                            <Tooltip title='Recommended'>
+                                <ListItem
+                                    button
+                                    key='whatshot'
+                                >
+                                    <ListItemIcon>
+                                        <WhatShotIcon className={classes.icon} />
+                                    </ListItemIcon>
+                                    <ListItemText primary='Recommended' />
+                                </ListItem>
+                            </Tooltip>
+                            <Tooltip title='Browse'>
+                                <ListItem
+                                    button
+                                    key='local_dining'
+                                    onClick={this.handleBrowseOpen}
+                                >
+                                    <ListItemIcon>
+                                        <LocalDiningIcon
+                                            className={classes.icon}
+                                        />
+                                    </ListItemIcon>
+                                <ListItemText primary='Browse' />
+                                </ListItem>
+                            </Tooltip>
                         </List>
                     </Drawer>
                     <main className={classes.content}>
