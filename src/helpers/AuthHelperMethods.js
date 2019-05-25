@@ -24,7 +24,7 @@ export default class AuthHelperMethods {
             headers['Authorization'] = "Bearer " + this.getToken();
         }
 
-        return axios('/user/login', {
+        return axios('/api/user/login', {
             method: 'POST',
             data: {
                 username,
@@ -63,7 +63,7 @@ export default class AuthHelperMethods {
         const decoded = decode(this.getToken());
         const { username } = decoded;
 
-        return axios('/user/data', {
+        return axios('/api/user/data', {
             method: 'GET',
             params: {
                 username

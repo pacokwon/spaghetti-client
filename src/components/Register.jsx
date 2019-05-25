@@ -58,7 +58,7 @@ class Register extends Component {
     }
 
     handleUsernameKeyup = event => {
-        axios('/user/check', {
+        axios('/api/user/check', {
             method: 'GET',
             params: { username: event.target.value }
         })
@@ -145,13 +145,13 @@ class Register extends Component {
             }))
         }
         if (password) console.log(password);
-        
+
         if (!(firstName && lastName && username && password && confirm && dormitory)) return;
 
         console.log('here');
         if (password !== confirm || nameOverlap) return;
 
-        axios('/user/register', {
+        axios('/api/user/register', {
             method: 'POST',
             data: {
                 name: firstName + lastName,
@@ -239,7 +239,7 @@ class Register extends Component {
                                         />
 
                                         {this.state.nameOverlap
-                                            ? <FormHelperText error>Username occupied</FormHelperText> 
+                                            ? <FormHelperText error>Username occupied</FormHelperText>
                                             : this.state.error.username
                                                 ? <FormHelperText error>Enter username</FormHelperText>
                                                 : null
@@ -260,7 +260,7 @@ class Register extends Component {
                                             onChange={this.handleSelectChange}
                                             error={this.state.error.dormitory}
                                         >
-                                            {Object.keys(dorms).map(key => 
+                                            {Object.keys(dorms).map(key =>
                                                 <MenuItem key={key} value={key}>{dorms[key]}</MenuItem>
                                             )}
                                         </Select>

@@ -12,6 +12,7 @@ import {
     ListItemText,
     Menu,
     MenuItem,
+    SvgIcon,
     Toolbar,
     Tooltip,
     Typography
@@ -27,6 +28,7 @@ import AuthHelperMethods from '../helpers/AuthHelperMethods'
 import ProfileCard from './ProfileCard.jsx'
 import NearbyRestaurants from './NearbyRestaurants.jsx'
 import Browser from './Browser.jsx'
+import SingleRestaurant from './SingleRestaurant.jsx'
 import classNames from 'classnames';
 
 const drawerWidth = 240;
@@ -178,7 +180,10 @@ class Dashboard extends React.Component {
     }
 
     handleCardClick = (event, name) => {
-        console.log('hello');
+        this.setState(prevState => ({
+            title: '',
+            contentElement: <SingleRestaurant name={name}/>
+        }))
     }
 
     render() {

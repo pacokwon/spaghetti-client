@@ -1,15 +1,14 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import food from './food.jpg'
 import {
     Card,
     CardHeader,
     CardMedia,
     CardContent,
-    CardActions,
     CardActionArea,
     Grid,
+    Grow,
     Typography
 } from '@material-ui/core'
 
@@ -45,7 +44,7 @@ class Browser extends Component {
     }
 
     componentDidMount() {
-        axios('/api/allRestaurants', {
+        axios('/api/restaurant/all', {
             method: 'GET',
         })
         .then(res => {
@@ -64,9 +63,8 @@ class Browser extends Component {
         const { building_data } = this.state;
         const { classes, onCardClick } = this.props;
         if (building_data) {
-            console.log(building_data.map(e => e))
             return (
-                <Fragment>
+                <Grow in={building_data !== null}>
                     <Grid container>
                     {building_data.map(e =>
                         <Grid
@@ -74,17 +72,14 @@ class Browser extends Component {
                             key={e.caft_name}
                             className={classes.grid}
                             component={Card}
-                            xs={6}
-                            sm={4}
-                            md={3}
-                            lg={2}
+                            xs={6} sm={4} md={3} lg={2}
                         >
                             <CardHeader
                                 title={e.caft_name}
                                 titleTypographyProps={{variant: 'body1'}}
                             />
                             <CardActionArea
-                                onClick={(e)=>onCardClick(e, 'hell')}
+                                onClick={(event)=>onCardClick(event, e.caft_name)}
                             >
                                 <CardMedia
                                     title={e.caft_name}
@@ -103,11 +98,11 @@ class Browser extends Component {
                         </Grid>
                     )}
                     </Grid>
-                </Fragment>
+                </Grow>
             );
         } else {
             return (
-                <div>Hello</div>
+                <div></div>
             );
         }
     }
