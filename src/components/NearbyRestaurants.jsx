@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles';
 import {
     Card,
     Grid,
@@ -9,20 +9,17 @@ import {
     ListItemText,
     ListSubheader,
     Typography
-} from '@material-ui/core'
+} from '@material-ui/core';
 import axios from 'axios';
-import { dorms } from './store.js'
+import { dorms } from './store.js';
+import RestaurantCard from './RestaurantCard.jsx';
 
 const styles = theme => ({
     card: {
         marginTop: 20,
-        [theme.breakpoints.up(1500 + theme.spacing.unit * 3 * 2)]: {
-            width: 700,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
         marginLeft: 10,
         marginRight: 10,
+        height: '100%'
     },
     heading: {
         paddingTop: 20
@@ -40,8 +37,9 @@ class NearbyRestaurants extends Component {
         super(props);
 
         this.state = {
-            rest_arr: null,
-            closest_N: 3
+            dist_arr: null,
+            closest_N: 3,
+            selectedRestaurant: null
         }
     }
 
@@ -52,7 +50,6 @@ class NearbyRestaurants extends Component {
          * 따라서 split으로 두 이름을 자르고 첫 번째 원소를 선택하면 한글이름을 얻게 된다.
          */
         const dormitory = '카이스트본원' + this.getDormName()
-        // console.log(this.state);
         axios('/api/restaurant/nearby', {
             method: 'GET',
             params: {
@@ -62,24 +59,30 @@ class NearbyRestaurants extends Component {
         })
         .then(res => {
             this.setState({
-                rest_arr: res.data
+                dist_arr: res.data
             })
         })
     }
 
-    getDormName() {
+    getDormName = () => {
         return dorms[this.props.userdata.dormitory].split(" ")[0];
     }
 
-    render() {
-        const { classes } = this.props;
-        const { rest_arr, closest_N } = this.state;
+    handleCaftClick = (caft, ratings) => event => {
+        this.setState({
+            selectedRestaurant: <RestaurantCard name={caft} ratings={ratings} onCardClick={this.props.onCardClick} />
+        })
+    }
 
-        if (rest_arr) {
+    render() {
+        const { classes, onCardClick } = this.props;
+        const { dist_arr, closest_N, selectedRestaurant } = this.state;
+
+        if (dist_arr) {
             return (
-                <Grow in={rest_arr !== null}>
-                    <Grid container>
-                        <Grid item xs={12} sm={6}>
+                <Grid container spacing={16}>
+                    <Grow in={dist_arr !== null}>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
                             <Card className={classes.card}>
                                 <Typography
                                     variant="subheading"
@@ -88,15 +91,18 @@ class NearbyRestaurants extends Component {
                                 >
                                     {`${closest_N} closest restaurants to ${this.getDormName()}`}
                                 </Typography>
+
                                 <List>
-                                {rest_arr.map(({ destination, cafeteria_list , distance}) =>
-                                    <Fragment key={destination}>
-                                    <ListSubheader> {destination} </ListSubheader>
-                                    {cafeteria_list.map((caft, index) =>
+                                {dist_arr.map(({ _id, cafeteria_list }) =>
+                                    <Fragment key={_id.destination}>
+                                    <ListSubheader> {_id.destination} </ListSubheader>
+                                    {cafeteria_list.map(({ cafeteria, ratings }, index) =>
                                         <ListItem
-                                            key={caft}
+                                            key={cafeteria}
+                                            button
+                                            onClick={this.handleCaftClick(cafeteria, ratings)}
                                         >
-                                            <ListItemText primary={caft}/>
+                                            <ListItemText primary={cafeteria}/>
                                             {index === 0
                                                 ?
                                                 <ListItemText
@@ -106,7 +112,7 @@ class NearbyRestaurants extends Component {
                                                         <Typography
                                                             variant="caption"
                                                         >
-                                                            {`${distance}m`}
+                                                            {`${_id.distance}m`}
                                                         </Typography>
                                                     }
                                                 />
@@ -119,18 +125,23 @@ class NearbyRestaurants extends Component {
                                 )}
                                 </List>
                             </Card>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Card className={classes.card}>
-                                Hello
-                            </Card>
-                        </Grid>
-                    </Grid>
-                </Grow>
+                            </Grid>
+                    </Grow>
+                        {selectedRestaurant
+                        ?
+                            <Grow in={selectedRestaurant !== null}>
+                                <Grid item xs={12} sm={6} md={6} lg={6}>
+                                    {selectedRestaurant}
+                                </Grid>
+                            </Grow>
+                        :
+                            null
+                        }
+                </Grid>
             );
         } else {
             return (
-                <div></div>
+                null
             );
         }
     }

@@ -101,19 +101,7 @@ class RechartExercise extends Component {
             >
                 <CardHeader title={'hello'} />
                 <CardContent>
-                    <BarChart layout={'vertical'} width={600} height={300} data={data2}
-                    margin={{top: 20, right: 30, left: 20, bottom: 5}}>
 
-                        <YAxis dataKey="name" type="category"/>
-                        <XAxis type="number" />
-                        <Tooltip/>
-                        <Legend />
-                        <Bar dataKey="1" stackId="a" fill="#8884d8" />
-                        <Bar dataKey="2" stackId="a" fill="#82ca9d" />
-                        <Bar dataKey="3" stackId="a" fill="#f49548" />
-                        <Bar dataKey="4" stackId="a" fill="#e94252" />
-                        <Bar dataKey="5" stackId="a" fill="#f24ce7" />
-                    </BarChart>
                 </CardContent>
             </Card>
         );

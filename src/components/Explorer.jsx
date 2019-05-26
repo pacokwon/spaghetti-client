@@ -34,7 +34,7 @@ const styles = theme => ({
     }
 })
 
-class Browser extends Component {
+class Explorer extends Component {
     constructor(props) {
         super(props);
 
@@ -108,4 +108,4 @@ class Browser extends Component {
     }
 }
 
-export default withStyles(styles)(Browser);
+export default withStyles(styles)(Explorer);

@@ -23,6 +23,8 @@ import {
     XAxis,
     YAxis
 } from 'recharts';
+import PacoRatings from './PacoRatings.jsx';
+import RestaurantRateDialog from './RestaurantRateDialog.jsx'
 
 const styles = theme => ({
     card: {
@@ -39,16 +41,17 @@ const styles = theme => ({
         marginBottom: 20
     },
     divider: {
-        marginBottom: 20
+        marginTop: 10,
+        marginBottom: 10
     },
     category: {
         marginTop: 10,
         marginBottom: 5
     },
-    content: {
-        maxHeight: 500,
-        overflow: 'auto',
-        marginTop: 20
+    menus: {
+        maxHeight: 450,
+        overflow: 'scroll',
+        marginTop: 10
     },
     grid: {
         marginRight: 5
@@ -57,6 +60,13 @@ const styles = theme => ({
         maxWidth: 400,
         marginLeft: 'auto',
         marginRight: 'auto'
+    },
+    constraint: {
+        [theme.breakpoints.up(1500)]: {
+            width: 654,
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        },
     }
 })
 
@@ -118,17 +128,18 @@ class SingleRestaurant extends Component {
             return acc;
         }, [
             {
-                'name': 'taste', ...defaultValues
+                'name': 'taste',
+                ...defaultValues
             },
             {
-                'name': 'portion', ...defaultValues
+                'name': 'portion',
+                ...defaultValues
             },
             {
-                'name': 'price', ...defaultValues
+                'name': 'price',
+                ...defaultValues
             }
         ]);
-
-        console.log(chartData);
 
         this.setState({
             title,
@@ -136,12 +147,29 @@ class SingleRestaurant extends Component {
         })
     }
 
+    handleSend = rating => {
+        console.log(rating);
+    }
+
     render() {
         const { classes } = this.props;
         const { data, title, rating, chartData } = this.state;
-        console.log(rating);
+        // https://learnui.design/tools/data-color-picker.html#palette
+        const chartPalette = [
+            '#fb3a3a',
+            '#fb6f00',
+            '#e99e00',
+            '#c6c800',
+            '#8bee00'
+        ]
+
         if (data && rating) {
             const { name, categories, description } = data;
+            const avgRating = data.rating.reduce((acc, cur, idx) => {
+                acc += cur;
+                return idx === data.rating.length - 1 ? acc / data.rating.length : acc;
+            })
+
             return (
                 <Grid container spacing={16}>
                     <Grow in = {data !== null && rating != null}>
@@ -160,37 +188,42 @@ class SingleRestaurant extends Component {
                                 component="img"
                                 className={classes.media}
                             />
-                            <CardContent className={classes.content}>
+                            <CardContent>
                                 <Typography
                                     component="p"
                                     variant="body2"
+                                    align='center'
                                     className={classes.description}
                                 >
                                     {description}
                                 </Typography>
+                                <PacoRatings starPoints={avgRating} />
+                                <RestaurantRateDialog onSend={this.handleSend}/>
                                 <Divider className={classes.divider} />
-                                {categories.map(obj =>
-                                    <Fragment key={obj.category}>
-                                        <Typography
-                                            variant="h6"
-                                            color="secondary"
-                                            className={classes.category}
-                                        >
-                                            {obj.category}
-                                        </Typography>
-                                        <List>
-                                        {obj.menus.map(menu =>
-                                            <ListItem
-                                                button
-                                                key={menu}
-                                                onClick={this.handleMenuClick(menu)}
+                                <div className={classes.menus}>
+                                    {categories.map(obj =>
+                                        <Fragment key={obj.category}>
+                                            <Typography
+                                                variant="h6"
+                                                color="secondary"
+                                                className={classes.category}
                                             >
-                                                <ListItemText primary={menu} />
-                                            </ListItem>
-                                        )}
-                                        </List>
-                                    </Fragment>
-                                )}
+                                                {obj.category}
+                                            </Typography>
+                                            <List>
+                                            {obj.menus.map(menu =>
+                                                <ListItem
+                                                    button
+                                                    key={menu}
+                                                    onClick={this.handleMenuClick(menu)}
+                                                >
+                                                    <ListItemText primary={menu} />
+                                                </ListItem>
+                                            )}
+                                            </List>
+                                        </Fragment>
+                                    )}
+                                </div>
                             </CardContent>
                         </Grid>
                     </Grow>
@@ -211,21 +244,32 @@ class SingleRestaurant extends Component {
                                 className={classes.media}
                             />
                             <CardContent className={classes.content}>
-                                <ResponsiveContainer width='100%' aspect={2.5}>
-                                    <BarChart layout={'vertical'} data={chartData}
-                                    margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                                <Typography
+                                    variant="h6"
+                                    align="center"
+                                >
+                                    Ratings
+                                </Typography>
+                                <div className={classes.constraint}>
+                                    <ResponsiveContainer width='100%' aspect={2.5}>
+                                        <BarChart layout={'vertical'} data={chartData}
+                                        margin={{top: 20, right: 30, left: 20, bottom: 5}}>
 
-                                        <YAxis dataKey="name" type="category"/>
-                                        <XAxis type="number" />
-                                        <Tooltip/>
-                                        <Legend />
-                                        <Bar dataKey="1" stackId="a" fill="#003f5c" />
-                                        <Bar dataKey="2" stackId="a" fill="#58508d" />
-                                        <Bar dataKey="3" stackId="a" fill="#bc5090" />
-                                        <Bar dataKey="4" stackId="a" fill="#ff6361" />
-                                        <Bar dataKey="5" stackId="a" fill="#ffa600" />
-                                    </BarChart>
-                                </ResponsiveContainer>
+                                            <YAxis dataKey="name" type="category"/>
+                                            <XAxis type="number" />
+                                            <Tooltip/>
+                                            <Legend />
+                                            {[1, 2, 3, 4, 5].map(e =>
+                                                <Bar
+                                                    key={e}
+                                                    dataKey={e}
+                                                    stackId="a"
+                                                    fill={chartPalette[e - 1]}
+                                                />
+                                            )}
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
                             </CardContent>
                         </Grid>
                     </Grow>

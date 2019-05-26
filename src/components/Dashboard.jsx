@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
     AppBar,
@@ -13,6 +13,7 @@ import {
     Menu,
     MenuItem,
     SvgIcon,
+    Paper,
     Toolbar,
     Tooltip,
     Typography
@@ -27,7 +28,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import AuthHelperMethods from '../helpers/AuthHelperMethods'
 import ProfileCard from './ProfileCard.jsx'
 import NearbyRestaurants from './NearbyRestaurants.jsx'
-import Browser from './Browser.jsx'
+import Explorer from './Explorer.jsx'
 import SingleRestaurant from './SingleRestaurant.jsx'
 import classNames from 'classnames';
 
@@ -98,10 +99,16 @@ const styles = theme => ({
     content: {
         padding: theme.spacing.unit * 3,
         marginLeft: 65
+    },
+    svgGrey: {
+        fill: '#ddd'
+    },
+    svgWhite: {
+        fill: '#fff'
     }
 })
 
-class Dashboard extends React.Component {
+class Dashboard extends Component {
     state = {
         open: false,
         anchorElement: null,
@@ -121,7 +128,7 @@ class Dashboard extends React.Component {
                 .then(res => {
                     this.setState({
                         userData: res,
-                        contentElement: <NearbyRestaurants userdata={res} />,
+                        contentElement: <NearbyRestaurants userdata={res} onCardClick={this.handleCardClick}/>,
                         title: 'Welcome, ' + res.username
                     })
                 })
@@ -149,10 +156,17 @@ class Dashboard extends React.Component {
         this.setState({ anchorElement: null });
     }
 
+    handleCardClick = (event, name) => {
+        this.setState(prevState => ({
+            title: '',
+            contentElement: <SingleRestaurant name={name}/>
+        }))
+    }
+
     handleHomeOpen = event => {
         this.setState(prevState => ({
             title: 'Welcome, ' + prevState.userData.username,
-            contentElement: <NearbyRestaurants userdata={prevState.userData} />
+            contentElement: <NearbyRestaurants userdata={prevState.userData} onCardClick={this.handleCardClick} />
         }))
     }
 
@@ -160,10 +174,10 @@ class Dashboard extends React.Component {
 
     }
 
-    handleBrowseOpen = () => {
+    handleExplorerOpen = () => {
         this.setState(prevState => ({
             title: '',
-            contentElement: <Browser onCardClick={this.handleCardClick} />
+            contentElement: <Explorer onCardClick={this.handleCardClick} />
         }))
     }
 
@@ -179,12 +193,7 @@ class Dashboard extends React.Component {
         this.props.history.push('/login')
     }
 
-    handleCardClick = (event, name) => {
-        this.setState(prevState => ({
-            title: '',
-            contentElement: <SingleRestaurant name={name}/>
-        }))
-    }
+
 
     render() {
         const { classes } = this.props;
@@ -303,18 +312,18 @@ class Dashboard extends React.Component {
                                     <ListItemText primary='Recommended' />
                                 </ListItem>
                             </Tooltip>
-                            <Tooltip title='Browse'>
+                            <Tooltip title='Explore'>
                                 <ListItem
                                     button
                                     key='local_dining'
-                                    onClick={this.handleBrowseOpen}
+                                    onClick={this.handleExplorerOpen}
                                 >
                                     <ListItemIcon>
                                         <LocalDiningIcon
                                             className={classes.icon}
                                         />
                                     </ListItemIcon>
-                                <ListItemText primary='Browse' />
+                                <ListItemText primary='Explore' />
                                 </ListItem>
                             </Tooltip>
                         </List>
@@ -334,7 +343,7 @@ class Dashboard extends React.Component {
             );
         } else {
             return (
-                <div>Loading..</div>
+                null
             );
         }
     }

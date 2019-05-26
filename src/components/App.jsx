@@ -5,7 +5,7 @@ import Register from './Register.jsx';
 import Login from './Login.jsx';
 import Dashboard from './Dashboard.jsx';
 import ProfileCard from './ProfileCard.jsx';
-import RechartExercise from './RechartExercise.jsx'
+import RestaurantRateDialog from './RestaurantRateDialog.jsx'
 
 class App extends Component {
     render() {
@@ -16,7 +16,7 @@ class App extends Component {
                     <Route exact path='/register' component={Register} />
                     <Route exact path='/dashboard' component={Dashboard} />
                     <Route exact path='/' component={NavBar} />
-                    <Route exact path='/exc' component={RechartExercise} />
+                    <Route exact path='/exc' component={RestaurantRateDialog} />
                     <Route exact path='/profile' component={ProfileCard} />
 
                 </Switch>
