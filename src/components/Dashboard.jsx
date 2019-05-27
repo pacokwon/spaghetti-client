@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
     AppBar,
@@ -12,7 +12,6 @@ import {
     ListItemText,
     Menu,
     MenuItem,
-    SvgIcon,
     Paper,
     Toolbar,
     Tooltip,
@@ -21,7 +20,6 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import HomeIcon from '@material-ui/icons/Home'
-import StarRateIcon from '@material-ui/icons/StarRate'
 import WhatShotIcon from '@material-ui/icons/Whatshot'
 import LocalDiningIcon from '@material-ui/icons/LocalDining.js'
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -193,8 +191,6 @@ class Dashboard extends Component {
         this.props.history.push('/login')
     }
 
-
-
     render() {
         const { classes } = this.props;
         // userData --> object. has the keys: dormitory, name, username
@@ -291,14 +287,6 @@ class Dashboard extends Component {
                                         />
                                     </ListItemIcon>
                                     <ListItemText primary='Home' />
-                                </ListItem>
-                            </Tooltip>
-                            <Tooltip title='Ratings'>
-                                <ListItem button key='star'>
-                                    <ListItemIcon>
-                                        <StarRateIcon className={classes.icon} />
-                                    </ListItemIcon>
-                                    <ListItemText primary='Ratings' />
                                 </ListItem>
                             </Tooltip>
                             <Tooltip title='Recommended'>

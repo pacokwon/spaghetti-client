@@ -3,7 +3,6 @@ import Ratings from 'react-ratings-declarative';
 import { withStyles } from '@material-ui/core/styles';
 import { Badge, Typography } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/StarRate'
-import purple from '@material-ui/core/colors/purple';
 
 const styles = theme => ({
     ratingsCenter: {

@@ -5,7 +5,7 @@ import Register from './Register.jsx';
 import Login from './Login.jsx';
 import Dashboard from './Dashboard.jsx';
 import ProfileCard from './ProfileCard.jsx';
-import RestaurantRateDialog from './RestaurantRateDialog.jsx'
+import MenuRateDialog from './MenuRateDialog.jsx'
 
 class App extends Component {
     render() {
@@ -16,7 +16,7 @@ class App extends Component {
                     <Route exact path='/register' component={Register} />
                     <Route exact path='/dashboard' component={Dashboard} />
                     <Route exact path='/' component={NavBar} />
-                    <Route exact path='/exc' component={RestaurantRateDialog} />
+                    <Route exact path='/exc' component={MenuRateDialog} />
                     <Route exact path='/profile' component={ProfileCard} />
 
                 </Switch>

@@ -7,7 +7,6 @@ import {
     CardContent,
     CardHeader,
     CardMedia,
-    Typography
 } from '@material-ui/core'
 import PacoRatings from './PacoRatings.jsx'
 
@@ -33,6 +32,13 @@ const styles = theme => ({
         marginLeft: 'auto',
         marginRight: 'auto'
     },
+    cardActions: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '60%',
+        marginLeft: 'auto',
+        marginRight: 'auto'
+    },
     button: {
         marginLeft: 'auto',
         marginRight: 'auto'
@@ -42,15 +48,43 @@ const styles = theme => ({
 class RestaurantCard extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            checked: true
+        }
+    }
+
+    toChartData = ratings => {
+        return ratings
+        .reduce((acc, cur) => {
+            acc[cur - 1] += 1;
+
+            return acc;
+        }, [0, 0, 0, 0, 0])
+        .reduce((acc, cur, idx) => {
+            acc.push({
+                name: idx + 1,
+                votes: cur
+            })
+
+            return acc;
+        }, [])
+
+    }
+
+    handleToggle = () => {
+        this.setState(prev => ({
+            checked: !prev.checked
+        }))
     }
 
     render() {
         const { name, ratings, classes, onCardClick } = this.props;
 
-        const average = ratings.reduce((acc, cur, idx) => {
+        const average = Math.round(ratings.reduce((acc, cur, idx) => {
             acc += cur;
             return idx === ratings.length - 1 ? acc / ratings.length : acc;
-        })
+        }) * 10) / 10;
 
         return (
             <Card className={classes.card}>
@@ -71,8 +105,8 @@ class RestaurantCard extends Component {
                     <Button
                         size="small"
                         color="primary"
-                        className={classes.button}
                         onClick={(event) => onCardClick(event, name)}
+                        className={classes.button}
                     >
                         Explore
                     </Button>

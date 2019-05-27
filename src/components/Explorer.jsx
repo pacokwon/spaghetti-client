@@ -76,7 +76,7 @@ class Explorer extends Component {
                         >
                             <CardHeader
                                 title={e.caft_name}
-                                titleTypographyProps={{variant: 'body1'}}
+                                titleTypographyProps={{variant: 'body1', align: 'center'}}
                             />
                             <CardActionArea
                                 onClick={(event)=>onCardClick(event, e.caft_name)}

@@ -9,16 +9,17 @@ import {
 } from '@material-ui/core';
 import Ratings from 'react-ratings-declarative'
 import { withStyles } from '@material-ui/core/styles'
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const styles = theme => ({
     center: {
-        maxWidth: 200,
+        maxWidth: 163,
         marginLeft: 'auto',
         marginRight: 'auto',
-        marginTop: 10
+        marginTop: 20
     }
 })
 
@@ -32,6 +33,7 @@ function RestaurantRateDialog(props) {
     }
 
     function handleClose() {
+        setRating(0);
         setOpen(false);
     }
 

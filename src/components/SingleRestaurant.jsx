@@ -10,6 +10,7 @@ import {
     List,
     ListItem,
     ListItemText,
+    Switch,
     Typography
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
@@ -25,6 +26,7 @@ import {
 } from 'recharts';
 import PacoRatings from './PacoRatings.jsx';
 import RestaurantRateDialog from './RestaurantRateDialog.jsx'
+import MenuRateDialog from './MenuRateDialog.jsx'
 
 const styles = theme => ({
     card: {
@@ -67,6 +69,9 @@ const styles = theme => ({
             marginLeft: 'auto',
             marginRight: 'auto'
         },
+    },
+    valign: {
+        paddingTop: '2%'
     }
 })
 
@@ -77,7 +82,7 @@ class SingleRestaurant extends Component {
         this.state = {
             data: null,
             rating: null,
-            title: ""
+            menu: ""
         }
     }
 
@@ -109,9 +114,7 @@ class SingleRestaurant extends Component {
         })
     }
 
-    handleMenuClick = title => event => {
-        const { ratings } = this.state.rating[title];
-
+    setChartData = ratings => {
         const defaultValues = {
             '1': 0,
             '2': 0,
@@ -142,40 +145,90 @@ class SingleRestaurant extends Component {
         ]);
 
         this.setState({
-            title,
             chartData
         })
     }
 
-    handleSend = rating => {
-        console.log(rating);
+    handleMenuClick = menu => event => {
+        const { ratings } = this.state.rating[menu];
+        this.setChartData(ratings);
+
+        this.setState({
+            menu
+        })
+    }
+
+    handleRestaurantSend = rating => {
+        const { name } = this.props;
+
+        let data = Object.assign({}, this.state.data);
+        data.rating.push(rating);
+        this.setState({ data });
+
+        axios.put('/api/rating/restaurant', {
+            name,
+            rating
+        })
+        .then(res => {
+            console.log(res);
+        })
+    }
+
+    handleMenuSend = starPointsObj => {
+        const { name } = this.props;
+        const { menu } = this.state;
+
+        let rating = this.state.rating;
+        console.log(rating[menu].ratings)
+        rating[menu].ratings.push(starPointsObj);
+        this.setChartData(rating[menu].ratings)
+
+        this.setState({ rating })
+
+        axios.put('/api/rating/menu', {
+            name,
+            menu,
+            starPointsObj
+        })
     }
 
     render() {
         const { classes } = this.props;
-        const { data, title, rating, chartData } = this.state;
+        const { data, menu, rating, chartData } = this.state;
+
         // https://learnui.design/tools/data-color-picker.html#palette
         const chartPalette = [
-            '#fb3a3a',
-            '#fb6f00',
-            '#e99e00',
-            '#c6c800',
-            '#8bee00'
+            [
+                '#fb3a3a',
+                '#fb6f00',
+                '#e99e00',
+                '#c6c800',
+                '#8bee00'
+            ],
+            [
+                '#003f5c',
+                '#58508d',
+                '#bc5090',
+                '#ff6361',
+                '#ffa600'
+            ]
         ]
+
+        const randomIndex = Math.floor(Math.random() * chartPalette.length)
 
         if (data && rating) {
             const { name, categories, description } = data;
-            const avgRating = data.rating.reduce((acc, cur, idx) => {
+            const avgRating = Math.round(data.rating.reduce((acc, cur, idx) => {
                 acc += cur;
                 return idx === data.rating.length - 1 ? acc / data.rating.length : acc;
-            })
+            }) * 10) / 10;
 
             return (
                 <Grid container spacing={16}>
                     <Grow in = {data !== null && rating != null}>
                         <Grid
                             item
-                            xs={6} sm={6} md={6}
+                            xs={12} sm={6} md={6}
                             component={Card}
                         >
                             <CardHeader
@@ -198,7 +251,7 @@ class SingleRestaurant extends Component {
                                     {description}
                                 </Typography>
                                 <PacoRatings starPoints={avgRating} />
-                                <RestaurantRateDialog onSend={this.handleSend}/>
+                                <RestaurantRateDialog onSend={this.handleRestaurantSend}/>
                                 <Divider className={classes.divider} />
                                 <div className={classes.menus}>
                                     {categories.map(obj =>
@@ -227,31 +280,34 @@ class SingleRestaurant extends Component {
                             </CardContent>
                         </Grid>
                     </Grow>
-                    <Grow in={title !== ""}>
+                    <Grow in={menu !== ""}>
                         <Grid
                             item
-                            xs={6} sm={6} md={6}
+                            xs={12} sm={6} md={6}
                             component={Card}
                         >
                             <CardHeader
-                                title={title}
+                                title={menu}
                                 titleTypographyProps={{variant: 'title', align: 'center'}}
                             />
                             <CardMedia
-                                title={title}
-                                src={require('../resources/food.jpeg')}
+                                title={menu}
+                                src={require('../resources/chicken.jpeg')}
                                 component="img"
                                 className={classes.media}
                             />
                             <CardContent className={classes.content}>
-                                <Typography
-                                    variant="h6"
-                                    align="center"
-                                >
-                                    Ratings
-                                </Typography>
+                                <div style={{display: 'flex', justifyContent: 'space-between', width: '50%', marginLeft: 'auto', marginRight: 'auto'}}>
+                                    <Typography
+                                        variant="h6"
+                                        className={classes.valign}
+                                    >
+                                        Menu Ratings
+                                    </Typography>
+                                    <Switch checked={true}/>
+                                </div>
                                 <div className={classes.constraint}>
-                                    <ResponsiveContainer width='100%' aspect={2.5}>
+                                    <ResponsiveContainer width='100%' aspect={2.4}>
                                         <BarChart layout={'vertical'} data={chartData}
                                         margin={{top: 20, right: 30, left: 20, bottom: 5}}>
 
@@ -264,12 +320,13 @@ class SingleRestaurant extends Component {
                                                     key={e}
                                                     dataKey={e}
                                                     stackId="a"
-                                                    fill={chartPalette[e - 1]}
+                                                    fill={chartPalette[randomIndex][e - 1]}
                                                 />
                                             )}
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
+                                <MenuRateDialog onSend={this.handleMenuSend} />
                             </CardContent>
                         </Grid>
                     </Grow>
