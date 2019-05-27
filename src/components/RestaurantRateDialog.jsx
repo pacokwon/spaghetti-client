@@ -16,7 +16,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const styles = theme => ({
     center: {
-        maxWidth: 163,
+        maxWidth: 169,
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: 20

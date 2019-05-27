@@ -6,7 +6,7 @@ import { dorms } from './store.js'
 const styles = theme => ({
     paper: {
         marginTop: 20,
-        [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
+        [theme.breakpoints.up(748)]: {
             width: 700,
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -22,7 +22,7 @@ class ProfileCard extends Component {
     render() {
         const { username, dormitory, name } = this.props.userdata;
         const { classes } = this.props;
-        
+
         return (
             <Paper className={classes.paper}>
                 <Table>

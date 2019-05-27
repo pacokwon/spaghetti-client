@@ -8,16 +8,16 @@ import axios from 'axios';
 
 const styles = theme => ({
     paper: {
-        marginTop: theme.spacing.unit * 3,
-        paddingLeft: theme.spacing.unit * 12,
-        paddingRight: theme.spacing.unit * 12,
-        paddingTop: theme.spacing.unit * 3,
-        paddingBottom: theme.spacing.unit * 5,
+        marginTop: theme.spacing(3),
+        paddingLeft: theme.spacing(12),
+        paddingRight: theme.spacing(12),
+        paddingTop: theme.spacing(3),
+        paddingBottom: theme.spacing(5),
     },
     main: {
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
-        [theme.breakpoints.up(800 + theme.spacing.unit * 3 * 2)]: {
+        marginLeft: theme.spacing(3),
+        marginRight: theme.spacing(3),
+        [theme.breakpoints.up(848)]: {
             width: 800,
             marginLeft: 'auto',
             marginRight: 'auto',

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {
     Button,
     Dialog,
@@ -17,7 +17,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const styles = theme => ({
     center: {
-        maxWidth: 115,
+        maxWidth: 119,
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: 20
@@ -97,7 +97,7 @@ class MenuRateDialog extends Component {
                     <DialogTitle>{"Rate this Menu!"}</DialogTitle>
                     <DialogContent>
                         <div className={classes.div}>
-                            <Typography variant="title" gutterBottom>
+                            <Typography variant="subtitle1" gutterBottom>
                                 Taste
                             </Typography>
                             <Ratings
@@ -114,7 +114,7 @@ class MenuRateDialog extends Component {
                             </Ratings>
                         </div>
                         <div className={classes.div}>
-                            <Typography variant="title" gutterBottom>
+                            <Typography variant="subtitle1" gutterBottom>
                                 Portion
                             </Typography>
                             <Ratings
@@ -132,7 +132,7 @@ class MenuRateDialog extends Component {
                         </div>
 
                         <div className={classes.div}>
-                            <Typography variant="title" gutterBottom>
+                            <Typography variant="subtitle1" gutterBottom>
                                 Price
                             </Typography>
                             <Ratings

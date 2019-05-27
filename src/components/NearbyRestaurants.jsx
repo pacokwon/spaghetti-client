@@ -75,17 +75,17 @@ class NearbyRestaurants extends Component {
     }
 
     render() {
-        const { classes, onCardClick } = this.props;
+        const { classes } = this.props;
         const { dist_arr, closest_N, selectedRestaurant } = this.state;
 
         if (dist_arr) {
             return (
-                <Grid container spacing={16}>
+                <Grid container spacing={2}>
                     <Grow in={dist_arr !== null}>
                         <Grid item xs={12} sm={6} md={6} lg={6}>
                             <Card className={classes.card}>
                                 <Typography
-                                    variant="subheading"
+                                    variant="subtitle1"
                                     align="center"
                                     className={classes.title}
                                 >

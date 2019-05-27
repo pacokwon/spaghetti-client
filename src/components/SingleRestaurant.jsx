@@ -5,6 +5,7 @@ import {
     CardContent,
     CardMedia,
     Divider,
+    Fade,
     Grid,
     Grow,
     List,
@@ -27,13 +28,14 @@ import {
 import PacoRatings from './PacoRatings.jsx';
 import RestaurantRateDialog from './RestaurantRateDialog.jsx'
 import MenuRateDialog from './MenuRateDialog.jsx'
+import MenuStarRatings from './MenuStarRatings.jsx';
 
 const styles = theme => ({
     card: {
         marginTop: 20,
         marginLeft: 10,
         marginRight: 10,
-        [theme.breakpoints.up(1500 + theme.spacing.unit * 3 * 2)]: {
+        [theme.breakpoints.up(1548)]: {
             width: 700,
             marginLeft: 'auto',
             marginRight: 'auto'
@@ -51,7 +53,7 @@ const styles = theme => ({
         marginBottom: 5
     },
     menus: {
-        maxHeight: 450,
+        maxHeight: 350,
         overflow: 'scroll',
         marginTop: 10
     },
@@ -64,8 +66,8 @@ const styles = theme => ({
         marginRight: 'auto'
     },
     constraint: {
-        [theme.breakpoints.up(1500)]: {
-            width: 654,
+        [theme.breakpoints.up(1300)]: {
+            width: 554,
             marginLeft: 'auto',
             marginRight: 'auto'
         },
@@ -82,7 +84,8 @@ class SingleRestaurant extends Component {
         this.state = {
             data: null,
             rating: null,
-            menu: ""
+            menu: "",
+            checked: true
         }
     }
 
@@ -151,6 +154,8 @@ class SingleRestaurant extends Component {
 
     handleMenuClick = menu => event => {
         const { ratings } = this.state.rating[menu];
+
+        console.log(ratings);
         this.setChartData(ratings);
 
         this.setState({
@@ -192,9 +197,15 @@ class SingleRestaurant extends Component {
         })
     }
 
+    handleSwitchChange = () => {
+        this.setState(prev => ({
+            checked: !prev.checked
+        }));
+    }
+
     render() {
         const { classes } = this.props;
-        const { data, menu, rating, chartData } = this.state;
+        const { data, menu, rating, chartData, checked } = this.state;
 
         // https://learnui.design/tools/data-color-picker.html#palette
         const chartPalette = [
@@ -211,10 +222,18 @@ class SingleRestaurant extends Component {
                 '#bc5090',
                 '#ff6361',
                 '#ffa600'
+            ],
+            [
+                '#7875d1',
+                '#cf67c1',
+                '#ff5f93',
+                '#ff7857',
+                '#ffa600'
             ]
         ]
 
-        const randomIndex = Math.floor(Math.random() * chartPalette.length)
+        const randomIndex = 2;
+        // Math.floor(Math.random() * chartPalette.length)
 
         if (data && rating) {
             const { name, categories, description } = data;
@@ -222,9 +241,11 @@ class SingleRestaurant extends Component {
                 acc += cur;
                 return idx === data.rating.length - 1 ? acc / data.rating.length : acc;
             }) * 10) / 10;
+            console.log(menu);
+            console.log(rating[menu])
 
             return (
-                <Grid container spacing={16}>
+                <Grid container spacing={2}>
                     <Grow in = {data !== null && rating != null}>
                         <Grid
                             item
@@ -233,7 +254,7 @@ class SingleRestaurant extends Component {
                         >
                             <CardHeader
                                 title={name}
-                                titleTypographyProps={{variant: 'title', align: 'center'}}
+                                titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
                             />
                             <CardMedia
                                 title={name}
@@ -250,7 +271,7 @@ class SingleRestaurant extends Component {
                                 >
                                     {description}
                                 </Typography>
-                                <PacoRatings starPoints={avgRating} />
+                                <PacoRatings starPoints={avgRating} title={'Restaurant Rating'} />
                                 <RestaurantRateDialog onSend={this.handleRestaurantSend}/>
                                 <Divider className={classes.divider} />
                                 <div className={classes.menus}>
@@ -288,7 +309,7 @@ class SingleRestaurant extends Component {
                         >
                             <CardHeader
                                 title={menu}
-                                titleTypographyProps={{variant: 'title', align: 'center'}}
+                                titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
                             />
                             <CardMedia
                                 title={menu}
@@ -304,27 +325,32 @@ class SingleRestaurant extends Component {
                                     >
                                         Menu Ratings
                                     </Typography>
-                                    <Switch checked={true}/>
+                                    <Switch checked={checked} onChange={this.handleSwitchChange} />
                                 </div>
                                 <div className={classes.constraint}>
-                                    <ResponsiveContainer width='100%' aspect={2.4}>
+                                    {
+                                        checked
+                                    ?
+                                        <ResponsiveContainer width='100%' aspect={2.4}>
                                         <BarChart layout={'vertical'} data={chartData}
                                         margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-
-                                            <YAxis dataKey="name" type="category"/>
-                                            <XAxis type="number" />
-                                            <Tooltip/>
-                                            <Legend />
-                                            {[1, 2, 3, 4, 5].map(e =>
-                                                <Bar
-                                                    key={e}
-                                                    dataKey={e}
-                                                    stackId="a"
-                                                    fill={chartPalette[randomIndex][e - 1]}
-                                                />
-                                            )}
+                                        <YAxis dataKey="name" type="category"/>
+                                        <XAxis type="number" />
+                                        <Tooltip/>
+                                        <Legend />
+                                        {[1, 2, 3, 4, 5].map(e =>
+                                            <Bar
+                                            key={e}
+                                            dataKey={e}
+                                            stackId="a"
+                                            fill={chartPalette[randomIndex][e - 1]}
+                                            />
+                                        )}
                                         </BarChart>
-                                    </ResponsiveContainer>
+                                        </ResponsiveContainer>
+                                    :
+                                        <MenuStarRatings ratings={rating[menu].ratings}/>
+                                    }
                                 </div>
                                 <MenuRateDialog onSend={this.handleMenuSend} />
                             </CardContent>

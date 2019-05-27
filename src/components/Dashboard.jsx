@@ -12,7 +12,6 @@ import {
     ListItemText,
     Menu,
     MenuItem,
-    Paper,
     Toolbar,
     Tooltip,
     Typography
@@ -63,7 +62,7 @@ const styles = theme => ({
         })
     },
     drawerClose: {
-        width: theme.spacing.unit * 8 + 1,
+        width: theme.spacing(8) + 1,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
@@ -95,7 +94,7 @@ const styles = theme => ({
         textAlign: 'center'
     },
     content: {
-        padding: theme.spacing.unit * 3,
+        padding: theme.spacing(3),
         marginLeft: 65
     },
     svgGrey: {
@@ -238,7 +237,7 @@ class Dashboard extends Component {
                             <span className={classes.rightSide}>
                                 <Typography
                                     color="inherit"
-                                    variant="subheading"
+                                    variant="overline"
                                     className={classes.title}
                                 >
                                     {userData.username}

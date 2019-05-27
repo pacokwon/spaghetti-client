@@ -28,7 +28,8 @@ const StyledBadge = withStyles(theme => ({
 
 
 function PacoRatings(props) {
-    const { classes, starPoints } = props;
+    const { classes, starPoints, title } = props;
+    console.log(starPoints);
 
     return (
         <div className={classes.ratingsCenter}>
@@ -38,7 +39,7 @@ function PacoRatings(props) {
                     align="center"
                     gutterBottom
                 >
-                    Restaurant Rating
+                    {title}
                 </Typography>
                 <StyledBadge
                     badgeContent={starPoints}
@@ -56,14 +57,16 @@ function PacoRatings(props) {
                 widgetSpacings="5px"
                 widgetRatedColors="rgb(255, 190, 6)"
             >
-                <Ratings.Widget />
-                <Ratings.Widget />
-                <Ratings.Widget />
-                <Ratings.Widget />
-                <Ratings.Widget />
+                {[0, 1, 2, 3, 4].map(e =>
+                    <Ratings.Widget key={e}/>
+                )}
             </Ratings>
         </div>
     )
+}
+
+PacoRatings.defaultProps = {
+    title: 'Restaurant Rating'
 }
 
 export default withStyles(styles)(PacoRatings);

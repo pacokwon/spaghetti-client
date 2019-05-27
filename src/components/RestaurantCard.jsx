@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
     Button,
@@ -13,7 +13,7 @@ import PacoRatings from './PacoRatings.jsx'
 const styles = theme => ({
     card: {
         marginTop: 20,
-        [theme.breakpoints.up(1600 + theme.spacing.unit * 3 * 2)]: {
+        [theme.breakpoints.up(1648)]: {
             width: 800,
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -90,7 +90,7 @@ class RestaurantCard extends Component {
             <Card className={classes.card}>
                 <CardHeader
                     title={name}
-                    titleTypographyProps={{variant: 'title', align: 'center'}}
+                    titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
                 />
                 <CardMedia
                     title={name}
@@ -105,7 +105,7 @@ class RestaurantCard extends Component {
                     <Button
                         size="small"
                         color="primary"
-                        onClick={(event) => onCardClick(event, name)}
+                        onClick={event => onCardClick(event, name)}
                         className={classes.button}
                     >
                         Explore
