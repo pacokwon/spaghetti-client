@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import NavBar from './NavBar.jsx';
-import { dorms } from './store.js'
 import { Button, CssBaseline, FormControl, Grid, FormHelperText, IconButton, Input, InputAdornment, InputLabel, MenuItem, Paper, Select, Typography } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import { dorms } from './subcomponents/store.js'
+import NavBar from './subcomponents/NavBar.jsx';
+import PreferenceDialog from './subcomponents/PreferenceDialog'
 
 const styles = theme => ({
     paper: {
@@ -92,7 +93,7 @@ class Register extends Component {
         }))
     }
 
-    handleSubmit = event => {
+    handleSubmit = (event, preference) => {
         event.preventDefault();
 
         const { firstName, lastName, username, password, confirm, dormitory, nameOverlap } = this.state;
@@ -148,7 +149,6 @@ class Register extends Component {
 
         if (!(firstName && lastName && username && password && confirm && dormitory)) return;
 
-        console.log('here');
         if (password !== confirm || nameOverlap) return;
 
         axios('/api/user/register', {
@@ -157,7 +157,8 @@ class Register extends Component {
                 name: firstName + lastName,
                 username,
                 password,
-                dormitory
+                dormitory,
+                preference
             }
         })
         .then(res => {
@@ -187,8 +188,8 @@ class Register extends Component {
                             Register
                         </Typography>
                         <form>
-                            <Grid container spacing={24} className={classes.grid}>
-                                <Grid item sm={6}>
+                            <Grid container spacing={2} className={classes.grid}>
+                                <Grid item xs={12} sm={6}>
                                     <FormControl fullWidth required>
                                         <InputLabel
                                             htmlFor="firstName"
@@ -206,7 +207,7 @@ class Register extends Component {
                                     </FormControl>
                                     {this.state.error.firstName ? <FormHelperText error>Enter first name</FormHelperText> : null}
                                 </Grid>
-                                <Grid item sm={6}>
+                                <Grid item xs={12} sm={6}>
                                     <FormControl fullWidth required>
                                         <InputLabel
                                             htmlFor="lastName"
@@ -222,7 +223,7 @@ class Register extends Component {
                                         />
                                     </FormControl>
                                 </Grid>
-                                <Grid item sm={6}>
+                                <Grid item xs={12} sm={6}>
                                     <FormControl fullWidth required>
                                         <InputLabel
                                             htmlFor="username"
@@ -246,7 +247,7 @@ class Register extends Component {
                                         }
                                     </FormControl>
                                 </Grid>
-                                <Grid item sm={6}>
+                                <Grid item xs={12} sm={6}>
                                     <FormControl fullWidth>
                                         <InputLabel
                                             htmlFor="dormitory"
@@ -267,7 +268,7 @@ class Register extends Component {
                                         {this.state.error.dormitory ? <FormHelperText error>Choose dormitory</FormHelperText> : null}
                                     </FormControl>
                                 </Grid>
-                                <Grid item sm={6}>
+                                <Grid item xs={12} sm={6}>
                                     <FormControl fullWidth required>
                                         <InputLabel
                                             htmlFor="password"
@@ -294,7 +295,7 @@ class Register extends Component {
                                         {this.state.error.password ? <FormHelperText error>Enter password</FormHelperText> : null}
                                     </FormControl>
                                 </Grid>
-                                <Grid item sm={6}>
+                                <Grid item xs={12} sm={6}>
                                     <FormControl fullWidth required>
                                         <InputLabel
                                             htmlFor="confirm"
@@ -322,19 +323,11 @@ class Register extends Component {
                                         {this.state.error.confirm ? <FormHelperText error>Passwords do not match!</FormHelperText> : null}
                                     </FormControl>
                                 </Grid>
-                                <Grid item sm={12} >
+                                <Grid item sm={12}>
                                     {this.state.registerSuccessful ? null : <FormHelperText error>Something is wrong</FormHelperText>}
                                 </Grid>
                                 <Grid item sm={12}>
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={this.handleSubmit}
-                                    >
-                                        Register
-                                    </Button>
+                                    <PreferenceDialog onSend={this.handleSubmit} />
                                 </Grid>
                             </Grid>
                         </form>

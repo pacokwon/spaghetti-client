@@ -1,10 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import {
     Breadcrumbs,
-    Card,
-    Fade,
     Link,
-    Typography,
 } from '@material-ui/core'
 import PortionIcon from '@material-ui/icons/PregnantWoman';
 import PriceIcon from '@material-ui/icons/AttachMoney';
@@ -98,7 +95,7 @@ class MenuStarRatings extends Component {
                         ?
                             <PacoRatings starPoints={avgObj[key]} title={key} key={key}/>
                         :
-                        null
+                            null
                     )
                 }
             </Fragment>

@@ -94,7 +94,7 @@ class RestaurantCard extends Component {
                 />
                 <CardMedia
                     title={name}
-                    src={require('../resources/' + name + '.jpeg')}
+                    src={require('../../assets/' + name + '.jpeg')}
                     component="img"
                     className={classes.media}
                 />

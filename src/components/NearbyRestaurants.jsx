@@ -11,8 +11,8 @@ import {
     Typography
 } from '@material-ui/core';
 import axios from 'axios';
-import { dorms } from './store.js';
-import RestaurantCard from './RestaurantCard.jsx';
+import { dorms } from './subcomponents/store.js';
+import RestaurantCard from './subcomponents/RestaurantCard.jsx';
 
 const styles = theme => ({
     card: {

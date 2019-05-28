@@ -11,6 +11,7 @@ import {
     List,
     ListItem,
     ListItemText,
+    MenuItem,
     Switch,
     Typography
 } from '@material-ui/core'
@@ -25,10 +26,10 @@ import {
     XAxis,
     YAxis
 } from 'recharts';
-import PacoRatings from './PacoRatings.jsx';
-import RestaurantRateDialog from './RestaurantRateDialog.jsx'
-import MenuRateDialog from './MenuRateDialog.jsx'
-import MenuStarRatings from './MenuStarRatings.jsx';
+import PacoRatings from './subcomponents/PacoRatings.jsx';
+import RestaurantRateDialog from './subcomponents/RestaurantRateDialog.jsx'
+import MenuRateDialog from './subcomponents/MenuRateDialog.jsx'
+import MenuStarRatings from './subcomponents/MenuStarRatings.jsx';
 
 const styles = theme => ({
     card: {
@@ -258,7 +259,7 @@ class SingleRestaurant extends Component {
                             />
                             <CardMedia
                                 title={name}
-                                src={require('../resources/' + name + '.jpeg')}
+                                src={require('../assets/' + name + '.jpeg')}
                                 component="img"
                                 className={classes.media}
                             />
@@ -285,14 +286,15 @@ class SingleRestaurant extends Component {
                                                 {obj.category}
                                             </Typography>
                                             <List>
-                                            {obj.menus.map(menu =>
-                                                <ListItem
+                                            {obj.menus.map(menuElement =>
+                                                <MenuItem
                                                     button
-                                                    key={menu}
-                                                    onClick={this.handleMenuClick(menu)}
+                                                    key={menuElement}
+                                                    onClick={this.handleMenuClick(menuElement)}
+                                                    selected={menuElement === menu}
                                                 >
-                                                    <ListItemText primary={menu} />
-                                                </ListItem>
+                                                    <ListItemText primary={menuElement} />
+                                                </MenuItem>
                                             )}
                                             </List>
                                         </Fragment>
@@ -313,7 +315,7 @@ class SingleRestaurant extends Component {
                             />
                             <CardMedia
                                 title={menu}
-                                src={require('../resources/chicken.jpeg')}
+                                src={require('../assets/chicken.jpeg')}
                                 component="img"
                                 className={classes.media}
                             />

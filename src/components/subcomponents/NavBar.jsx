@@ -8,7 +8,7 @@ const NavBar = ({ title }) => {
         <div>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="title" color="inherit">
+                    <Typography variant="h6" color="inherit">
                         {title}
                     </Typography>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="20 20 100 216" style={{height: 'auto'}}>

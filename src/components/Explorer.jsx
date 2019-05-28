@@ -83,7 +83,7 @@ class Explorer extends Component {
                             >
                                 <CardMedia
                                     title={e.caft_name}
-                                    src={require('../resources/' + e.caft_name + '.jpeg')}
+                                    src={require('../assets/' + e.caft_name + '.jpeg')}
                                     component="img"
                                 />
                             </CardActionArea>

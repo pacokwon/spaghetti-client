@@ -23,10 +23,10 @@ import WhatShotIcon from '@material-ui/icons/Whatshot'
 import LocalDiningIcon from '@material-ui/icons/LocalDining.js'
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AuthHelperMethods from '../helpers/AuthHelperMethods'
-import ProfileCard from './ProfileCard.jsx'
 import NearbyRestaurants from './NearbyRestaurants.jsx'
 import Explorer from './Explorer.jsx'
 import SingleRestaurant from './SingleRestaurant.jsx'
+import ProfileCard from './subcomponents/ProfileCard.jsx'
 import classNames from 'classnames';
 
 const drawerWidth = 240;
@@ -123,6 +123,8 @@ class Dashboard extends Component {
 
                 Auth.getUserData()
                 .then(res => {
+                    console.log(res);
+
                     this.setState({
                         userData: res,
                         contentElement: <NearbyRestaurants userdata={res} onCardClick={this.handleCardClick}/>,

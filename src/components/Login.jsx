@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NavBar from './NavBar.jsx';
+import NavBar from './subcomponents/NavBar.jsx';
 import { Button, CssBaseline, FormControl, Grid, IconButton, Input, InputAdornment, InputLabel, Link, Paper, Typography} from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
@@ -132,7 +132,7 @@ class Login extends Component {
                                     ?
                                     <Grid item sm={12}>
                                         <Typography
-                                            variant="subheading"
+                                            variant="overline"
                                             align="center"
                                             color="error"
                                         >
@@ -155,11 +155,11 @@ class Login extends Component {
                                 </Grid>
                                 <Grid item sm={6} xs={12} className={classes.gridItem}>
                                     <Typography
-                                        variant="subheading"
+                                        variant="body1"
                                         align="center"
                                         className={classes.register}
                                     >
-                                        Don't have an account?
+                                        Don't have an account? <br />
                                         <Link href='/register' color='primary'>
                                             Register here
                                         </Link>
