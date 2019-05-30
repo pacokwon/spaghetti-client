@@ -59,34 +59,31 @@ class MenuStarRatings extends Component {
             'Price': 0
         });
 
+        const icons = {
+            'Taste': <TasteIcon />,
+            'Portion': <PortionIcon />,
+            'Price': <PriceIcon />
+        }
+
         return (
             <Fragment>
                 <div className={classes.card}>
                     <Breadcrumbs >
-                        <Link
-                            href='/'
-                            color='inherit'
-                            onClick={event => this.handleClick(event, 'Taste')}
-                        >
-                            <TasteIcon />
-                            Taste
-                        </Link>
-                        <Link
-                            href='/'
-                            color='inherit'
-                            onClick={event => this.handleClick(event, 'Portion')}
-                        >
-                            <PortionIcon />
-                            Portion
-                        </Link>
-                        <Link
-                            href='/'
-                            color='inherit'
-                            onClick={event => this.handleClick(event, 'Price')}
-                        >
-                            <PriceIcon />
-                            Price
-                        </Link>
+                        {Object.keys(avgObj).map(key =>
+                            <Link
+                                href='/'
+                                color={selected === key ? 'inherit' : 'inherit'}
+                                onClick={event => this.handleClick(event, key)}
+                                key={key}
+                            >
+                                {
+                                    <Fragment>
+                                        {icons[key]}
+                                        {key}
+                                    </Fragment>
+                                }
+                            </Link>
+                        )}
                     </Breadcrumbs>
                 </div>
                 {

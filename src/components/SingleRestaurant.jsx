@@ -85,9 +85,11 @@ class SingleRestaurant extends Component {
         this.state = {
             data: null,
             rating: null,
-            menu: "",
-            checked: true
+            menu: props.menu ? props.menu : "",
+            checked: true,
+            chartData: null
         }
+
     }
 
     componentDidMount() {
@@ -112,6 +114,8 @@ class SingleRestaurant extends Component {
             }
         })
         .then(res => {
+            if (this.props.menu) this.setChartData(res.data[this.props.menu].ratings)
+
             this.setState({
                 rating: res.data
             })
@@ -156,7 +160,6 @@ class SingleRestaurant extends Component {
     handleMenuClick = menu => event => {
         const { ratings } = this.state.rating[menu];
 
-        console.log(ratings);
         this.setChartData(ratings);
 
         this.setState({
@@ -167,6 +170,8 @@ class SingleRestaurant extends Component {
     handleRestaurantSend = rating => {
         const { name } = this.props;
 
+        if (!rating.taste && !rating.portion && !rating.price) return;
+
         let data = Object.assign({}, this.state.data);
         data.rating.push(rating);
         this.setState({ data });
@@ -176,7 +181,7 @@ class SingleRestaurant extends Component {
             rating
         })
         .then(res => {
-            console.log(res);
+            // console.log(res);
         })
     }
 
@@ -185,7 +190,6 @@ class SingleRestaurant extends Component {
         const { menu } = this.state;
 
         let rating = this.state.rating;
-        console.log(rating[menu].ratings)
         rating[menu].ratings.push(starPointsObj);
         this.setChartData(rating[menu].ratings)
 
@@ -242,8 +246,6 @@ class SingleRestaurant extends Component {
                 acc += cur;
                 return idx === data.rating.length - 1 ? acc / data.rating.length : acc;
             }) * 10) / 10;
-            console.log(menu);
-            console.log(rating[menu])
 
             return (
                 <Grid container spacing={2}>
@@ -255,7 +257,7 @@ class SingleRestaurant extends Component {
                         >
                             <CardHeader
                                 title={name}
-                                titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
+                                titleTypographyProps={{variant: 'h5', align: 'center'}}
                             />
                             <CardMedia
                                 title={name}
@@ -303,7 +305,7 @@ class SingleRestaurant extends Component {
                             </CardContent>
                         </Grid>
                     </Grow>
-                    <Grow in={menu !== ""}>
+                    <Grow in={menu !== "" && chartData != null}>
                         <Grid
                             item
                             xs={12} sm={6} md={6}
@@ -334,8 +336,11 @@ class SingleRestaurant extends Component {
                                         checked
                                     ?
                                         <ResponsiveContainer width='100%' aspect={2.4}>
-                                        <BarChart layout={'vertical'} data={chartData}
-                                        margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                                        <BarChart
+                                            layout='vertical'
+                                            data={chartData}
+                                            margin={{top: 20, right: 30, left: 20, bottom: 5}}
+                                        >
                                         <YAxis dataKey="name" type="category"/>
                                         <XAxis type="number" />
                                         <Tooltip/>

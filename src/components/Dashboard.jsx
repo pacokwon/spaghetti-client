@@ -27,6 +27,7 @@ import NearbyRestaurants from './NearbyRestaurants.jsx'
 import Explorer from './Explorer.jsx'
 import SingleRestaurant from './SingleRestaurant.jsx'
 import ProfileCard from './subcomponents/ProfileCard.jsx'
+import Recommended from './Recommended.jsx';
 import classNames from 'classnames';
 
 const drawerWidth = 240;
@@ -156,10 +157,10 @@ class Dashboard extends Component {
     }
 
     handleCardClick = (event, name) => {
-        this.setState(prevState => ({
+        this.setState({
             title: '',
-            contentElement: <SingleRestaurant name={name}/>
-        }))
+            contentElement: <SingleRestaurant name={name} />
+        })
     }
 
     handleHomeOpen = event => {
@@ -167,10 +168,6 @@ class Dashboard extends Component {
             title: 'Welcome, ' + prevState.userData.username,
             contentElement: <NearbyRestaurants userdata={prevState.userData} onCardClick={this.handleCardClick} />
         }))
-    }
-
-    handleHomeClose = () => {
-
     }
 
     handleExplorerOpen = () => {
@@ -190,6 +187,20 @@ class Dashboard extends Component {
 
     handleLogoutClick = () => {
         this.props.history.push('/login')
+    }
+    
+    handleRecommendedMenuClick = (event, caftName, menuName) => {
+        this.setState({
+            title: '',
+            contentElement: <SingleRestaurant name={caftName} menu={menuName} />
+        })
+    }
+
+    handleRecommendedOpen = () => {
+        this.setState(prevState => ({
+            title: 'Recommended for you',
+            contentElement: <Recommended userData={prevState.userData} onButtonClick={this.handleRecommendedMenuClick} />
+        }))
     }
 
     render() {
@@ -254,7 +265,7 @@ class Dashboard extends Component {
                             </span>
                         </Toolbar>
                     </AppBar>
-                    {renderMenu}
+                        {renderMenu}
                     <Drawer
                         variant="permanent"
                         className={classNames(classes.drawer, {
@@ -281,6 +292,7 @@ class Dashboard extends Component {
                                     button
                                     key='home'
                                     onClick={this.handleHomeOpen}
+                                    style={{marginBottom: 10}}
                                 >
                                     <ListItemIcon>
                                         <HomeIcon
@@ -294,6 +306,8 @@ class Dashboard extends Component {
                                 <ListItem
                                     button
                                     key='whatshot'
+                                    onClick={this.handleRecommendedOpen}
+                                    style={{marginBottom: 10}}
                                 >
                                     <ListItemIcon>
                                         <WhatShotIcon className={classes.icon} />
@@ -306,6 +320,7 @@ class Dashboard extends Component {
                                     button
                                     key='local_dining'
                                     onClick={this.handleExplorerOpen}
+                                    style={{marginBottom: 10}}
                                 >
                                     <ListItemIcon>
                                         <LocalDiningIcon
@@ -327,7 +342,6 @@ class Dashboard extends Component {
                         : null
                         }
                     </main>
-
                 </div>
             );
         } else {

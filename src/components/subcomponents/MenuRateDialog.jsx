@@ -64,6 +64,9 @@ class MenuRateDialog extends Component {
 
     sendRating = ratings => {
         this.handleClose();
+
+        if (!ratings.taste && !ratings.portion && !ratings.price) return;
+
         this.props.onSend(ratings);
         this.setState({
             ratings: {

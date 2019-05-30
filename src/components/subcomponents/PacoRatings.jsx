@@ -19,13 +19,12 @@ const styles = theme => ({
 })
 
 const StyledBadge = withStyles(theme => ({
-  badge: {
-    top: '20%',
-    // The border color match the background color.
-    border: `2px solid white`,
-  },
+    badge: {
+        top: '20%',
+        // The border color match the background color.
+        border: `2px solid white`,
+    },
 }))(Badge);
-
 
 function PacoRatings(props) {
     const { classes, starPoints, title } = props;

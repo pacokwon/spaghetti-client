@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Table, TableBody, TableCell, TableRow, Typography, Paper } from '@material-ui/core'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+    Typography,
+    Paper 
+} from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { dorms } from './store.js'
 import MenuStarRatings from './MenuStarRatings';
@@ -22,7 +29,6 @@ class ProfileCard extends Component {
 
     render() {
         const { username, dormitory, name, preference } = this.props.userdata;
-        console.log(preference);
         const { classes } = this.props;
 
         return (
@@ -67,7 +73,6 @@ class ProfileCard extends Component {
                     <MenuStarRatings ratings={[preference]} />
                 </Paper>
             </React.Fragment>
-
         );
     }
 }

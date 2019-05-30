@@ -111,6 +111,7 @@ class NearbyRestaurants extends Component {
                                                     primary={
                                                         <Typography
                                                             variant="caption"
+                                                            color="textSecondary"
                                                         >
                                                             {`${_id.distance}m`}
                                                         </Typography>
