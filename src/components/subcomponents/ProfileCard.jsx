@@ -150,7 +150,7 @@ class ProfileCard extends Component {
                             }
                             label={
                                 <Typography variant="overline">
-                                    Edit Toggle Mode
+                                    Toggle Edit Mode
                                 </Typography>
                             }
                             labelPlacement="start"

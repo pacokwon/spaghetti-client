@@ -5,15 +5,15 @@ import {
     CardContent,
     CardMedia,
     Divider,
-    Fade,
     FormGroup,
     FormControlLabel,
     Grid,
     Grow,
+    IconButton,
     List,
-    ListItem,
     ListItemText,
     MenuItem,
+    Snackbar,
     Switch,
     Typography
 } from '@material-ui/core'
@@ -28,6 +28,7 @@ import {
     XAxis,
     YAxis
 } from 'recharts';
+import CloseIcon from '@material-ui/icons/Close';
 import PacoRatings from './subcomponents/PacoRatings.jsx';
 import RestaurantRateDialog from './subcomponents/RestaurantRateDialog.jsx'
 import MenuRateDialog from './subcomponents/MenuRateDialog.jsx'
@@ -44,21 +45,26 @@ const styles = theme => ({
             marginRight: 'auto'
         },
     },
+    category: {
+        marginTop: 10,
+        marginBottom: 5
+    },
+    constraint: {
+        [theme.breakpoints.up(1300)]: {
+            width: 554,
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        },
+    },
+    close: {
+        padding: theme.spacing(0.5)
+    },
     description: {
         marginBottom: 20
     },
     divider: {
         marginTop: 10,
         marginBottom: 10
-    },
-    category: {
-        marginTop: 10,
-        marginBottom: 5
-    },
-    menus: {
-        maxHeight: 350,
-        overflow: 'scroll',
-        marginTop: 10
     },
     grid: {
         marginRight: 5
@@ -68,15 +74,10 @@ const styles = theme => ({
         marginLeft: 'auto',
         marginRight: 'auto'
     },
-    constraint: {
-        [theme.breakpoints.up(1300)]: {
-            width: 554,
-            marginLeft: 'auto',
-            marginRight: 'auto'
-        },
-    },
-    valign: {
-        paddingTop: '2%'
+    menus: {
+        maxHeight: 350,
+        overflow: 'scroll',
+        marginTop: 10
     }
 })
 
@@ -89,9 +90,9 @@ class SingleRestaurant extends Component {
             rating: null,
             menu: props.menu ? props.menu : "",
             checked: true,
-            chartData: null
+            chartData: null,
+            snackbarOpen: false
         }
-
     }
 
     componentDidMount() {
@@ -172,6 +173,14 @@ class SingleRestaurant extends Component {
     handleRestaurantSend = rating => {
         const { name } = this.props;
 
+        if (rating === 0) {
+            this.setState({
+                message: 'Rating must be between 1~5',
+                snackbarOpen: true
+            })
+            return;
+        }
+
         let data = Object.assign({}, this.state.data);
         data.rating.push(rating);
         this.setState({ data });
@@ -180,6 +189,13 @@ class SingleRestaurant extends Component {
             name,
             rating
         })
+        .then(res => {
+            this.setState({
+                message: 'Rating Successful',
+                snackbarOpen: true
+            })
+        })
+
     }
 
     handleMenuSend = starPointsObj => {
@@ -187,7 +203,14 @@ class SingleRestaurant extends Component {
         const { menu } = this.state;
         const { taste, portion, price } = starPointsObj;
 
-        if (!taste || !portion || !price) return;
+        if (!taste || !portion || !price) {
+            this.setState({
+                message: 'Rating must be between 1~5',
+                snackbarOpen: true
+            })
+
+            return;
+        }
 
         let rating = this.state.rating;
         rating[menu].ratings.push(starPointsObj);
@@ -200,6 +223,12 @@ class SingleRestaurant extends Component {
             menu,
             starPointsObj
         })
+        .then(res => {
+            this.setState({
+                message: 'Rating Successful',
+                snackbarOpen: true
+            })
+        })
     }
 
     handleSwitchChange = () => {
@@ -208,9 +237,17 @@ class SingleRestaurant extends Component {
         }));
     }
 
+    handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') return;
+
+        this.setState({
+            snackbarOpen: false
+        })
+    }
+
     render() {
         const { classes } = this.props;
-        const { data, menu, rating, chartData, checked } = this.state;
+        const { data, menu, rating, chartData, checked, snackbarOpen, message } = this.state;
 
         // https://learnui.design/tools/data-color-picker.html#palette
         const chartPalette = [
@@ -255,137 +292,159 @@ class SingleRestaurant extends Component {
             }) * 10) / 10;
 
             return (
-                <Grid container spacing={2}>
-                    <Grow in = {data !== null && rating != null}>
-                        <Grid
-                            item
-                            xs={12} sm={6} md={6}
-                            component={Card}
-                        >
-                            <CardHeader
-                                title={name}
-                                titleTypographyProps={{variant: 'h5', align: 'center'}}
-                            />
-                            <CardMedia
-                                title={name}
-                                src={require('../assets/' + name + '.jpeg')}
-                                component="img"
-                                className={classes.media}
-                            />
-                            <CardContent>
-                                <Typography
-                                    component="p"
-                                    variant="body2"
-                                    align='center'
-                                    className={classes.description}
-                                >
-                                    {description}
-                                </Typography>
-                                <PacoRatings starPoints={avgRating} title={'Restaurant Rating'} />
-                                <RestaurantRateDialog onSend={this.handleRestaurantSend}/>
-                                <Divider className={classes.divider} />
-                                <div className={classes.menus}>
-                                    {categories.map(obj =>
-                                        <Fragment key={obj.category}>
-                                            <Typography
-                                                variant="h6"
-                                                color="secondary"
-                                                className={classes.category}
-                                            >
-                                                {obj.category}
-                                            </Typography>
-                                            <List>
-                                            {obj.menus.map(menuElement =>
-                                                <MenuItem
-                                                    button
-                                                    key={menuElement}
-                                                    onClick={this.handleMenuClick(menuElement)}
-                                                    selected={menuElement === menu}
-                                                >
-                                                    <ListItemText primary={menuElement} />
-                                                </MenuItem>
-                                            )}
-                                            </List>
-                                        </Fragment>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Grid>
-                    </Grow>
-                    <Grow in={menu !== "" && chartData != null}>
-                        <Grid
-                            item
-                            xs={12} sm={6} md={6}
-                            component={Card}
-                        >
-                            <CardHeader
-                                title={menu}
-                                titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
-                            />
-                            <CardMedia
-                                title={menu}
-                                src={require('../assets/chicken.jpeg')}
-                                component="img"
-                                className={classes.media}
-                            />
-                            <CardContent className={classes.content}>
-                                <div style={{display: 'flex', justifyContent: 'space-between', width: '50%', marginLeft: 'auto', marginRight: 'auto'}}>
+                <Fragment>
+                    <Grid container spacing={2}>
+                        <Grow in = {data !== null && rating != null}>
+                            <Grid
+                                item
+                                xs={12} sm={6} md={6}
+                                component={Card}
+                            >
+                                <CardHeader
+                                    title={name}
+                                    titleTypographyProps={{variant: 'h5', align: 'center'}}
+                                />
+                                <CardMedia
+                                    title={name}
+                                    src={require('../assets/' + name + '.jpeg')}
+                                    component="img"
+                                    className={classes.media}
+                                />
+                                <CardContent>
                                     <Typography
-                                        variant="h6"
+                                        component="p"
+                                        variant="body2"
+                                        align='center'
+                                        className={classes.description}
                                     >
-                                        Menu Ratings
+                                        {description}
                                     </Typography>
-                                    <FormGroup row>
-                                        <FormControlLabel
-                                            control={
-                                                <Switch
-                                                    checked={checked}
-                                                    onChange={this.handleSwitchChange}
-                                                />
-                                            }
-                                            label={
-                                                <Typography variant="overline">
-                                                    {checked ? 'View Star' : 'View Graph'}
+                                    <PacoRatings starPoints={avgRating} title={'Restaurant Rating'} />
+                                    <RestaurantRateDialog onSend={this.handleRestaurantSend}/>
+                                    <Divider className={classes.divider} />
+                                    <div className={classes.menus}>
+                                        {categories.map(obj =>
+                                            <Fragment key={obj.category}>
+                                                <Typography
+                                                    variant="h6"
+                                                    color="secondary"
+                                                    className={classes.category}
+                                                >
+                                                    {obj.category}
                                                 </Typography>
-                                            }
-                                            labelPlacement="start"
-                                        >
-                                        </FormControlLabel>
-                                    </FormGroup>
-                                </div>
-                                <div className={classes.constraint}>
-                                    {
-                                        checked
-                                    ?
-                                        <ResponsiveContainer width='100%' aspect={2.4}>
-                                        <BarChart
-                                            layout='vertical'
-                                            data={chartData}
-                                            margin={{top: 20, right: 30, left: 20, bottom: 5}}
-                                        >
-                                        <YAxis dataKey="name" type="category"/>
-                                        <XAxis type="number" />
-                                        <Tooltip/>
-                                        <Legend />
-                                        {[1, 2, 3, 4, 5].map(e =>
-                                            <Bar
-                                            key={e}
-                                            dataKey={e}
-                                            stackId="a"
-                                            fill={chartPalette[randomIndex][e - 1]}
-                                            />
+                                                <List>
+                                                {obj.menus.map(menuElement =>
+                                                    <MenuItem
+                                                        button
+                                                        key={menuElement}
+                                                        onClick={this.handleMenuClick(menuElement)}
+                                                        selected={menuElement === menu}
+                                                    >
+                                                        <ListItemText primary={menuElement} />
+                                                    </MenuItem>
+                                                )}
+                                                </List>
+                                            </Fragment>
                                         )}
-                                        </BarChart>
-                                        </ResponsiveContainer>
-                                    :
-                                        <MenuStarRatings ratings={rating[menu].ratings}/>
-                                    }
-                                </div>
-                                <MenuRateDialog onSend={this.handleMenuSend} />
-                            </CardContent>
-                        </Grid>
-                    </Grow>
-                </Grid>
+                                    </div>
+                                </CardContent>
+                            </Grid>
+                        </Grow>
+                        <Grow in={menu !== "" && chartData != null}>
+                            <Grid
+                                item
+                                xs={12} sm={6} md={6}
+                                component={Card}
+                            >
+                                <CardHeader
+                                    title={menu}
+                                    titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
+                                />
+                                <CardMedia
+                                    title={menu}
+                                    src={require('../assets/chicken.jpeg')}
+                                    component="img"
+                                    className={classes.media}
+                                />
+                                <CardContent className={classes.content}>
+                                    <div style={{display: 'flex', justifyContent: 'space-between', width: '50%', marginLeft: 'auto', marginRight: 'auto'}}>
+                                        <Typography
+                                            variant="h6"
+                                        >
+                                            Menu Ratings
+                                        </Typography>
+                                        <FormGroup row>
+                                            <FormControlLabel
+                                                control={
+                                                    <Switch
+                                                        checked={checked}
+                                                        onChange={this.handleSwitchChange}
+                                                    />
+                                                }
+                                                label={
+                                                    <Typography variant="overline">
+                                                        {checked ? 'View Star' : 'View Graph'}
+                                                    </Typography>
+                                                }
+                                                labelPlacement="start"
+                                            >
+                                            </FormControlLabel>
+                                        </FormGroup>
+                                    </div>
+                                    <div className={classes.constraint}>
+                                        {
+                                            checked
+                                        ?
+                                            <ResponsiveContainer width='100%' aspect={2.4}>
+                                            <BarChart
+                                                layout='vertical'
+                                                data={chartData}
+                                                margin={{top: 20, right: 30, left: 20, bottom: 5}}
+                                            >
+                                            <YAxis dataKey="name" type="category"/>
+                                            <XAxis type="number" />
+                                            <Tooltip/>
+                                            <Legend />
+                                            {[1, 2, 3, 4, 5].map(e =>
+                                                <Bar
+                                                key={e}
+                                                dataKey={e}
+                                                stackId="a"
+                                                fill={chartPalette[randomIndex][e - 1]}
+                                                />
+                                            )}
+                                            </BarChart>
+                                            </ResponsiveContainer>
+                                        :
+                                            <MenuStarRatings ratings={rating[menu].ratings}/>
+                                        }
+                                    </div>
+                                    <MenuRateDialog onSend={this.handleMenuSend} />
+                                </CardContent>
+                            </Grid>
+                        </Grow>
+                    </Grid>
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left'
+                        }}
+                        open={snackbarOpen}
+                        autoHideDuration={4000}
+                        onClose={this.handleSnackbarClose}
+                        message={message}
+                        action={[
+                            <IconButton
+                                key="close"
+                                onClick={this.handleSnackbarClose}
+                                className={classes.close}
+                                color="inherit"
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        ]}
+                    />
+                </Fragment>
             );
         } else {
             return (

@@ -188,7 +188,7 @@ class Dashboard extends Component {
     handleLogoutClick = () => {
         this.props.history.push('/login')
     }
-    
+
     handleRecommendedMenuClick = (event, caftName, menuName) => {
         this.setState({
             title: '',
@@ -245,7 +245,7 @@ class Dashboard extends Component {
                                 color="inherit"
                                 className={classes.title}
                             >
-                                Hello
+                                Spaghetti
                             </Typography>
                             <span className={classes.rightSide}>
                                 <Typography
