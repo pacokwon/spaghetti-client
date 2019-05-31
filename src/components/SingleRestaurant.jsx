@@ -6,6 +6,8 @@ import {
     CardMedia,
     Divider,
     Fade,
+    FormGroup,
+    FormControlLabel,
     Grid,
     Grow,
     List,
@@ -170,8 +172,6 @@ class SingleRestaurant extends Component {
     handleRestaurantSend = rating => {
         const { name } = this.props;
 
-        if (!rating.taste && !rating.portion && !rating.price) return;
-
         let data = Object.assign({}, this.state.data);
         data.rating.push(rating);
         this.setState({ data });
@@ -180,14 +180,14 @@ class SingleRestaurant extends Component {
             name,
             rating
         })
-        .then(res => {
-            // console.log(res);
-        })
     }
 
     handleMenuSend = starPointsObj => {
         const { name } = this.props;
         const { menu } = this.state;
+        const { taste, portion, price } = starPointsObj;
+
+        if (!taste || !portion || !price) return;
 
         let rating = this.state.rating;
         rating[menu].ratings.push(starPointsObj);
@@ -234,10 +234,17 @@ class SingleRestaurant extends Component {
                 '#ff5f93',
                 '#ff7857',
                 '#ffa600'
+            ],
+            [
+                '#0a71bf',
+                '#a069c7',
+                '#f35aa1',
+                '#ff6f60',
+                '#ffa600'
             ]
         ]
 
-        const randomIndex = 2;
+        const randomIndex = 3;
         // Math.floor(Math.random() * chartPalette.length)
 
         if (data && rating) {
@@ -325,11 +332,26 @@ class SingleRestaurant extends Component {
                                 <div style={{display: 'flex', justifyContent: 'space-between', width: '50%', marginLeft: 'auto', marginRight: 'auto'}}>
                                     <Typography
                                         variant="h6"
-                                        className={classes.valign}
                                     >
                                         Menu Ratings
                                     </Typography>
-                                    <Switch checked={checked} onChange={this.handleSwitchChange} />
+                                    <FormGroup row>
+                                        <FormControlLabel
+                                            control={
+                                                <Switch
+                                                    checked={checked}
+                                                    onChange={this.handleSwitchChange}
+                                                />
+                                            }
+                                            label={
+                                                <Typography variant="overline">
+                                                    {checked ? 'View Star' : 'View Graph'}
+                                                </Typography>
+                                            }
+                                            labelPlacement="start"
+                                        >
+                                        </FormControlLabel>
+                                    </FormGroup>
                                 </div>
                                 <div className={classes.constraint}>
                                     {

@@ -28,7 +28,6 @@ const StyledBadge = withStyles(theme => ({
 
 function PacoRatings(props) {
     const { classes, starPoints, title } = props;
-    console.log(starPoints);
 
     return (
         <div className={classes.ratingsCenter}>

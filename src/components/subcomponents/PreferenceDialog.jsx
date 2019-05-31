@@ -75,6 +75,11 @@ class PreferenceDialog extends Component {
     render() {
         const { open, preference } = this.state;
         const { classes } = this.props;
+        const icons = {
+            'taste': <TasteIcon />,
+            'portion': <PortionIcon />,
+            'price': <PriceIcon />
+        }
 
         return (
             <Fragment>
@@ -97,73 +102,36 @@ class PreferenceDialog extends Component {
                         disableTypography={true}
                         className={classes.title}
                     >
-                        <Typography
-                            variant="overline"
-                        >
+                        <Typography variant="overline">
                             There's one more thing...
                         </Typography>
-                        <Typography
-                            variant="h6"
-                        >
+                        <Typography variant="h6">
                             Select your preference
                         </Typography>
                     </DialogTitle>
                     <DialogContent>
-                        <div className={classes.div}>
-                            <Typography variant="subtitle1" gutterBottom>
-                                <TasteIcon />
-                                Taste
-                            </Typography>
-                            <Ratings
-                                rating={preference['taste']}
-                                widgetDimensions="30px"
-                                widgetSpacings="5px"
-                                widgetRatedColors="rgb(255, 190, 6)"
-                                widgetHoverColors="rgb(255, 190, 6)"
-                                changeRating={newRating => this.changeRating('taste', newRating)}
-                            >
-                                {[0, 1, 2, 3, 4].map(e =>
-                                    <Ratings.Widget key={e}/>
-                                )}
-                            </Ratings>
-                        </div>
-                        <div className={classes.div}>
-                            <Typography variant="subtitle1" gutterBottom>
-                                <PortionIcon />
-                                Portion
-                            </Typography>
-                            <Ratings
-                                rating={preference['portion']}
-                                widgetDimensions="30px"
-                                widgetSpacings="5px"
-                                widgetRatedColors="rgb(255, 190, 6)"
-                                widgetHoverColors="rgb(255, 190, 6)"
-                                changeRating={newRating => this.changeRating('portion', newRating)}
-                            >
-                                {[0, 1, 2, 3, 4].map(e =>
-                                    <Ratings.Widget key={e}/>
-                                )}
-                            </Ratings>
-                        </div>
-
-                        <div className={classes.div}>
-                            <Typography variant="subtitle1" gutterBottom>
-                                <PriceIcon />
-                                Price
-                            </Typography>
-                            <Ratings
-                                rating={preference['price']}
-                                widgetDimensions="30px"
-                                widgetSpacings="5px"
-                                widgetRatedColors="rgb(255, 190, 6)"
-                                widgetHoverColors="rgb(255, 190, 6)"
-                                changeRating={newRating => this.changeRating('price', newRating)}
-                            >
-                                {[0, 1, 2, 3, 4].map(e =>
-                                    <Ratings.Widget key={e}/>
-                                )}
-                            </Ratings>
-                        </div>
+                        {
+                            Object.keys(icons).map(key =>
+                                <div className={classes.div} key={key}>
+                                    <Typography variant="subtitle1" gutterBottom>
+                                        {icons[key]}
+                                        {key[0].toUpperCase() + key.slice(1)}
+                                    </Typography>
+                                    <Ratings
+                                        rating={preference[key]}
+                                        widgetDimensions="30px"
+                                        widgetSpacings="5px"
+                                        widgetRatedColors="rgb(255, 190, 6)"
+                                        widgetHoverColors="rgb(255, 190, 6)"
+                                        changeRating={newRating => this.changeRating(key, newRating)}
+                                    >
+                                        {[0, 1, 2, 3, 4].map(e =>
+                                            <Ratings.Widget key={e}/>
+                                        )}
+                                    </Ratings>
+                                </div>
+                            )
+                        }
                     </DialogContent>
                     <DialogActions>
                         <Button

@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
-import { CssBaseline, FormControl, Grid, FormHelperText, IconButton, Input, InputAdornment, InputLabel, MenuItem, Paper, Select, Typography } from '@material-ui/core';
+import {
+    CssBaseline,
+    FormControl,
+    FormHelperText,
+    Grid,
+    IconButton,
+    Input,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    Typography
+} from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import { dorms } from './subcomponents/store.js'
+import axios from 'axios';
 import NavBar from './subcomponents/NavBar.jsx';
 import PreferenceDialog from './subcomponents/PreferenceDialog'
 

@@ -5,7 +5,7 @@ import {
     Grid,
     Grow,
     List,
-    ListItem,
+    MenuItem,
     ListItemText,
     ListSubheader,
     Typography
@@ -70,13 +70,14 @@ class NearbyRestaurants extends Component {
 
     handleCaftClick = (caft, ratings) => event => {
         this.setState({
+            selectedRestaurantName: caft,
             selectedRestaurant: <RestaurantCard name={caft} ratings={ratings} onCardClick={this.props.onCardClick} />
         })
     }
 
     render() {
         const { classes } = this.props;
-        const { dist_arr, closest_N, selectedRestaurant } = this.state;
+        const { dist_arr, closest_N, selectedRestaurant, selectedRestaurantName } = this.state;
 
         if (dist_arr) {
             return (
@@ -97,10 +98,11 @@ class NearbyRestaurants extends Component {
                                     <Fragment key={_id.destination}>
                                     <ListSubheader> {_id.destination} </ListSubheader>
                                     {cafeteria_list.map(({ cafeteria, ratings }, index) =>
-                                        <ListItem
+                                        <MenuItem
                                             key={cafeteria}
                                             button
                                             onClick={this.handleCaftClick(cafeteria, ratings)}
+                                            selected={selectedRestaurantName === cafeteria}
                                         >
                                             <ListItemText primary={cafeteria}/>
                                             {index === 0
@@ -120,7 +122,7 @@ class NearbyRestaurants extends Component {
                                                 :
                                                 null
                                             }
-                                        </ListItem>
+                                        </MenuItem>
                                     )}
                                     </Fragment>
                                 )}

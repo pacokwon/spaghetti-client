@@ -72,7 +72,7 @@ class MenuStarRatings extends Component {
                         {Object.keys(avgObj).map(key =>
                             <Link
                                 href='/'
-                                color={selected === key ? 'inherit' : 'inherit'}
+                                color={selected === key ? 'primary' : 'inherit'}
                                 onClick={event => this.handleClick(event, key)}
                                 key={key}
                             >

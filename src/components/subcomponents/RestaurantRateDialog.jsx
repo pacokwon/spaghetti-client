@@ -67,11 +67,9 @@ function RestaurantRateDialog(props) {
                         widgetHoverColors="rgb(255, 190, 6)"
                         changeRating={changeRating}
                     >
-                        <Ratings.Widget />
-                        <Ratings.Widget />
-                        <Ratings.Widget />
-                        <Ratings.Widget />
-                        <Ratings.Widget />
+                        {[0, 1, 2, 3, 4].map(e =>
+                            <Ratings.Widget key={e}/>
+                        )}
                     </Ratings>
                 </DialogContent>
                 <DialogActions>
