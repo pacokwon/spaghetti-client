@@ -123,7 +123,7 @@ class Recommended extends Component {
                                                         {category}
                                                     </Typography>
                                                     <StyledBadge
-                                                        badgeContent={Math.round(elem.rating[category] / 10) * 10}
+                                                        badgeContent={Math.round(elem.rating[category] * 10) / 10}
                                                         color="primary"
                                                     >
                                                         <StarIcon
