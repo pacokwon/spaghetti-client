@@ -15,7 +15,7 @@ class App extends Component {
                     <Route exact path='/login' component={Login} />
                     <Route exact path='/register' component={Register} />
                     <Route exact path='/dashboard' component={Dashboard} />
-                    <Route exact path='/' component={NavBar} />
+                    <Route exact path='/' component={Dashboard} />
                     <Route exact path='/exc' component={PreferenceDialog} />
                     <Route exact path='/profile' component={ProfileCard} />
 

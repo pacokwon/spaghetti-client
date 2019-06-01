@@ -4,6 +4,7 @@ import {
     Card,
     Grid,
     Grow,
+    Input,
     List,
     MenuItem,
     ListItemText,
@@ -14,12 +15,14 @@ import axios from 'axios';
 import { dorms } from './subcomponents/store.js';
 import RestaurantCard from './subcomponents/RestaurantCard.jsx';
 
+
 const styles = theme => ({
     card: {
         marginTop: 20,
         marginLeft: 10,
         marginRight: 10,
-        height: '100%'
+        height: 660,
+        overflow: 'scroll'
     },
     heading: {
         paddingTop: 20
@@ -54,7 +57,7 @@ class NearbyRestaurants extends Component {
             method: 'GET',
             params: {
                 start: dormitory,
-                closest_N: this.state.closest_N
+                closest_N: 7
             }
         })
         .then(res => {
@@ -75,6 +78,10 @@ class NearbyRestaurants extends Component {
         })
     }
 
+    handleInputChange = event => {
+        this.setState({closest_N: event.target.value});
+    }
+
     render() {
         const { classes } = this.props;
         const { dist_arr, closest_N, selectedRestaurant, selectedRestaurantName } = this.state;
@@ -85,46 +92,58 @@ class NearbyRestaurants extends Component {
                     <Grow in={dist_arr !== null}>
                         <Grid item xs={12} sm={6} md={6} lg={6}>
                             <Card className={classes.card}>
+                                <div style={{textAlign: 'center'}}>
+                                <Input
+                                    type="Number"
+                                    style={{width: 30}}
+                                    inputProps={{min: 1, max: 7}}
+                                    value={closest_N}
+                                    onChange={this.handleInputChange}
+                                />
                                 <Typography
                                     variant="subtitle1"
-                                    align="center"
                                     className={classes.title}
+                                    display='inline'
                                 >
-                                    {`${closest_N} closest restaurants to ${this.getDormName()}`}
+                                    {`closest restaurants to ${this.getDormName()}`}
                                 </Typography>
-
+                                </div>
                                 <List>
-                                {dist_arr.map(({ _id, cafeteria_list }) =>
-                                    <Fragment key={_id.destination}>
-                                    <ListSubheader> {_id.destination} </ListSubheader>
-                                    {cafeteria_list.map(({ cafeteria, ratings }, index) =>
-                                        <MenuItem
-                                            key={cafeteria}
-                                            button
-                                            onClick={this.handleCaftClick(cafeteria, ratings)}
-                                            selected={selectedRestaurantName === cafeteria}
-                                        >
-                                            <ListItemText primary={cafeteria}/>
-                                            {index === 0
-                                                ?
-                                                <ListItemText
-                                                    disableTypography
-                                                    className={classes.distance}
-                                                    primary={
-                                                        <Typography
-                                                            variant="caption"
-                                                            color="textSecondary"
-                                                        >
-                                                            {`${_id.distance}m`}
-                                                        </Typography>
+                                {dist_arr.map(({ _id, cafeteria_list }, idx) =>
+                                    idx < closest_N
+                                    ?
+                                        <Fragment key={_id.destination}>
+                                            <ListSubheader disableSticky={true}> {_id.destination} </ListSubheader>
+                                            {cafeteria_list.map(({ cafeteria, ratings }, index) =>
+                                                <MenuItem
+                                                    key={cafeteria}
+                                                    button
+                                                    onClick={this.handleCaftClick(cafeteria, ratings)}
+                                                    selected={selectedRestaurantName === cafeteria}
+                                                >
+                                                    <ListItemText primary={cafeteria}/>
+                                                    {index === 0
+                                                        ?
+                                                        <ListItemText
+                                                            disableTypography
+                                                            className={classes.distance}
+                                                            primary={
+                                                                <Typography
+                                                                    variant="caption"
+                                                                    color="textSecondary"
+                                                                >
+                                                                    {`${_id.distance}m`}
+                                                                </Typography>
+                                                            }
+                                                        />
+                                                        :
+                                                        null
                                                     }
-                                                />
-                                                :
-                                                null
-                                            }
-                                        </MenuItem>
-                                    )}
-                                    </Fragment>
+                                                </MenuItem>
+                                            )}
+                                        </Fragment>
+                                    :
+                                        null
                                 )}
                                 </List>
                             </Card>

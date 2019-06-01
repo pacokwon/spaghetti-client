@@ -20,7 +20,7 @@ const styles = theme => ({
         },
         marginLeft: 10,
         marginRight: 10,
-        height: '100%'
+        height: 660
     },
     media: {
         maxWidth: 400,
