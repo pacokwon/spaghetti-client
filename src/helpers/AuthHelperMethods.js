@@ -38,7 +38,6 @@ export default class AuthHelperMethods {
     isTokenValid = token => {
         try {
             const decoded = jwt.verify(token, 'keyboard cat');
-            console.log(decoded.exp < Date.now() / 1000);
 
             return decoded.exp > Date.now() / 1000;
 

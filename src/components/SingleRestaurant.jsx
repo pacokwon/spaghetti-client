@@ -300,7 +300,6 @@ class SingleRestaurant extends Component {
         // Math.floor(Math.random() * chartPalette.length)
 
         if (data && rating) {
-            console.log(rating);
             const { name, categories, description } = data;
             const avgRating = Math.round(data.rating.reduce((acc, cur, idx) => {
                 acc += cur;

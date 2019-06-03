@@ -158,8 +158,6 @@ class Register extends Component {
                 }
             }))
         }
-        if (password) console.log(password);
-
         if (!(firstName && lastName && username && password && confirm && dormitory)) return;
 
         if (password !== confirm || nameOverlap) return;
