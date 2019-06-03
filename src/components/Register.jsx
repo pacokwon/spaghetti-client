@@ -188,7 +188,7 @@ class Register extends Component {
 
         return (
             <React.Fragment>
-                <NavBar title="Register"/>
+                <NavBar title="Spaghetti-Register"/>
                 <main className={classes.main}>
                     <CssBaseline />
                     <Paper className={classes.paper}>

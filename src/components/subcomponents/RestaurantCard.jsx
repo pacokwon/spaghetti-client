@@ -90,7 +90,7 @@ class RestaurantCard extends Component {
             <Card className={classes.card}>
                 <CardHeader
                     title={name}
-                    titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
+                    titleTypographyProps={{variant: 'h6', align: 'center'}}
                 />
                 <CardMedia
                     title={name}

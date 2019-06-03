@@ -14,7 +14,7 @@ import {
 import axios from 'axios';
 import { dorms } from './subcomponents/store.js';
 import RestaurantCard from './subcomponents/RestaurantCard.jsx';
-
+import AuthHelperMethods from '../helpers/AuthHelperMethods';
 
 const styles = theme => ({
     card: {
@@ -53,6 +53,7 @@ class NearbyRestaurants extends Component {
          * 따라서 split으로 두 이름을 자르고 첫 번째 원소를 선택하면 한글이름을 얻게 된다.
          */
         const dormitory = '카이스트본원' + this.getDormName()
+
         axios('/api/restaurant/nearby', {
             method: 'GET',
             params: {
@@ -61,8 +62,12 @@ class NearbyRestaurants extends Component {
             }
         })
         .then(res => {
+            const { cafeteria, ratings } = res.data[0].cafeteria_list[0];
+
             this.setState({
-                dist_arr: res.data
+                dist_arr: res.data,
+                selectedRestaurant: <RestaurantCard name={cafeteria} ratings={ratings} onCardClick={this.props.onCardClick} />,
+                selectedRestaurantName: cafeteria
             })
         })
     }

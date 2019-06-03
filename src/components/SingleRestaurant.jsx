@@ -17,8 +17,6 @@ import {
     Switch,
     Typography
 } from '@material-ui/core'
-import { withStyles } from '@material-ui/core/styles'
-import axios from 'axios';
 import {
     Bar,
     BarChart,
@@ -28,6 +26,9 @@ import {
     XAxis,
     YAxis
 } from 'recharts';
+import { withStyles } from '@material-ui/core/styles'
+import axios from 'axios';
+import AuthHelperMethods from '../helpers/AuthHelperMethods'
 import CloseIcon from '@material-ui/icons/Close';
 import PacoRatings from './subcomponents/PacoRatings.jsx';
 import RestaurantRateDialog from './subcomponents/RestaurantRateDialog.jsx'
@@ -110,7 +111,7 @@ class SingleRestaurant extends Component {
             })
         })
 
-        axios('/api/rating/single', {
+        axios('/api/rating/wholemenu', {
             method: 'GET',
             params: {
                 'name': name
@@ -185,9 +186,18 @@ class SingleRestaurant extends Component {
         data.rating.push(rating);
         this.setState({ data });
 
+        const Auth = new AuthHelperMethods();
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Auth.getToken()}`
+        }
+
         axios.put('/api/rating/restaurant', {
             name,
-            rating
+            rating,
+        },{
+            headers
         })
         .then(res => {
             this.setState({
@@ -447,9 +457,7 @@ class SingleRestaurant extends Component {
                 </Fragment>
             );
         } else {
-            return (
-                null
-            );
+            return null;
         }
     }
 }

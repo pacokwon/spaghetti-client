@@ -75,7 +75,7 @@ class Login extends Component {
 
         return (
             <React.Fragment>
-                <NavBar title="Login" />
+                <NavBar title="Spaghetti-Login" />
                 <main className={classes.main}>
                     <CssBaseline />
                     <Paper className={classes.paper}>

@@ -10,6 +10,7 @@ import {
     Typography
 } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/StarRate'
+import AuthHelperMethods from '../helpers/AuthHelperMethods';
 
 const StyledBadge = withStyles(theme => ({
   badge: {
@@ -58,14 +59,25 @@ class Recommended extends Component {
     }
 
     componentDidMount() {
+        const Auth = new AuthHelperMethods();
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + Auth.getToken()
+        }
+
         axios('/api/rating/recommended', {
             method: 'GET',
-            params: this.props.userData.preference
+            params: this.props.userData.preference,
+            headers,
         })
         .then(res => {
             this.setState({
                 rcmArr: res.data
             })
+        })
+        .catch((err) => {
+            console.log(err);
         })
     }
 

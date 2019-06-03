@@ -119,24 +119,14 @@ class Dashboard extends Component {
             console.log('Not Logged In');
             this.props.history.replace('/login');
         } else {
-            try {
-                Auth.getConfirm()
-
-                Auth.getUserData()
-                .then(res => {
-                    console.log(res);
-
-                    this.setState({
-                        userData: res,
-                        contentElement: <NearbyRestaurants userdata={res} onCardClick={this.handleCardClick}/>,
-                        title: 'Welcome, ' + res.username
-                    })
+            Auth.getUserData()
+            .then(res => {
+                this.setState({
+                    userData: res,
+                    contentElement: <NearbyRestaurants userdata={res} onCardClick={this.handleCardClick}/>,
+                    title: 'Welcome, ' + res.username
                 })
-            } catch (e) {
-                Auth.logout();
-                this.props.history.replace('/login');
-            }
-
+            })
         }
     }
 
@@ -186,6 +176,9 @@ class Dashboard extends Component {
     }
 
     handleLogoutClick = () => {
+        const Auth = new AuthHelperMethods();
+
+        Auth.logout();
         this.props.history.push('/login')
     }
 
@@ -216,7 +209,6 @@ class Dashboard extends Component {
             >
                 <MenuItem onClick={this.handleProfileClick}>Your Profile</MenuItem>
                 <MenuItem onClick={this.handleLogoutClick}>Logout</MenuItem>
-
             </Menu>
         );
 
@@ -337,10 +329,7 @@ class Dashboard extends Component {
                         <Typography variant="h5">
                             {title}
                         </Typography>
-                        {this.state.contentElement
-                        ? this.state.contentElement
-                        : null
-                        }
+                        {this.state.contentElement ? this.state.contentElement : null }
                     </main>
                 </div>
             );

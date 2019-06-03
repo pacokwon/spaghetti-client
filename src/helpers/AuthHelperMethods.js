@@ -1,5 +1,6 @@
 import decode from 'jwt-decode'
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 
 export default class AuthHelperMethods {
     setToken = token => {
@@ -26,6 +27,7 @@ export default class AuthHelperMethods {
 
         return axios('/api/user/login', {
             method: 'POST',
+            headers,
             data: {
                 username,
                 password
@@ -40,31 +42,33 @@ export default class AuthHelperMethods {
     loggedIn = () => {
         const token = this.getToken();
 
-        return token && !this.isTokenExpired(token);
+        return token && this.isTokenValid(token);
     };
 
-    isTokenExpired = (token) => {
+    isTokenValid = token => {
         try {
-            const decoded = decode(token);
+            const decoded = jwt.verify(token, 'keyboard cat');
 
-            return decoded.exp < (Date.now() / 1000)
+            return decoded.exp > Date.now() / 1000;
         } catch (err) {
             return false;
         }
     }
 
-    getConfirm() {
-        let token = decode(this.getToken());
-        return token;
-    }
-
     getUserData() {
         if (!this.loggedIn()) return null;
-        const decoded = decode(this.getToken());
-        const { username } = decoded;
+        const token = this.getToken();
+        const { username } = decode(token);
+
+        const headers = {
+            'Accept': "application/json",
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+        };
 
         return axios('/api/user/data', {
             method: 'GET',
+            headers,
             params: {
                 username
             }
@@ -72,6 +76,5 @@ export default class AuthHelperMethods {
         .then(res => {
             return res.data;
         })
-        // decoded.username
     }
 }

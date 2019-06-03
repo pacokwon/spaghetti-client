@@ -101,9 +101,7 @@ class Explorer extends Component {
                 </Grow>
             );
         } else {
-            return (
-                <div></div>
-            );
+            return null;
         }
     }
 }

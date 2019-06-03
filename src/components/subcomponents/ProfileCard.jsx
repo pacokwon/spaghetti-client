@@ -25,6 +25,7 @@ import TasteIcon from '@material-ui/icons/RoomService';
 import MenuStarRatings from './MenuStarRatings';
 import Ratings from 'react-ratings-declarative';
 import axios from 'axios';
+import AuthHelperMethods from '../../helpers/AuthHelperMethods';
 
 const styles = theme => ({
     paper: {
@@ -86,10 +87,19 @@ class ProfileCard extends Component {
                 message: 'No Changes Made',
             })
         } else {
+            const Auth = new AuthHelperMethods();
+            const headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + Auth.getToken()
+            }
+
             axios.put('/api/user/modify', {
                 username,
                 preference,
                 selectedDorm
+            }, {
+                headers
             })
             .then(res => {
                 let newUserdata = this.state.userdata;
