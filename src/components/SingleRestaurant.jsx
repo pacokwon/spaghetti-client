@@ -196,9 +196,7 @@ class SingleRestaurant extends Component {
         axios.put('/api/rating/restaurant', {
             name,
             rating,
-        },{
-            headers
-        })
+        }, { headers })
         .then(res => {
             this.setState({
                 message: 'Rating Successful',
@@ -228,11 +226,18 @@ class SingleRestaurant extends Component {
 
         this.setState({ rating })
 
+        const Auth = new AuthHelperMethods();
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Auth.getToken()}`
+        }
+
         axios.put('/api/rating/menu', {
             name,
             menu,
             starPointsObj
-        })
+        }, { headers })
         .then(res => {
             this.setState({
                 message: 'Rating Successful',
@@ -295,6 +300,7 @@ class SingleRestaurant extends Component {
         // Math.floor(Math.random() * chartPalette.length)
 
         if (data && rating) {
+            console.log(rating);
             const { name, categories, description } = data;
             const avgRating = Math.round(data.rating.reduce((acc, cur, idx) => {
                 acc += cur;
@@ -360,80 +366,86 @@ class SingleRestaurant extends Component {
                                 </CardContent>
                             </Grid>
                         </Grow>
-                        <Grow in={menu !== "" && chartData != null}>
-                            <Grid
-                                item
-                                xs={12} sm={6} md={6}
-                                component={Card}
-                            >
-                                <CardHeader
-                                    title={menu}
-                                    titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
-                                />
-                                <CardMedia
-                                    title={menu}
-                                    src={require('../assets/chicken.jpeg')}
-                                    component="img"
-                                    className={classes.media}
-                                />
-                                <CardContent className={classes.content}>
-                                    <div style={{display: 'flex', justifyContent: 'space-between', width: '50%', marginLeft: 'auto', marginRight: 'auto'}}>
-                                        <Typography
-                                            variant="h6"
-                                        >
-                                            Menu Ratings
-                                        </Typography>
-                                        <FormGroup row>
-                                            <FormControlLabel
-                                                control={
-                                                    <Switch
-                                                        checked={checked}
-                                                        onChange={this.handleSwitchChange}
+                        {
+                            menu !== "" && chartData !== null
+                            ?
+                            (<Grow in={menu !== "" && chartData !== null}>
+                                <Grid
+                                    item
+                                    xs={12} sm={6} md={6}
+                                    component={Card}
+                                >
+                                    <CardHeader
+                                        title={menu}
+                                        titleTypographyProps={{variant: 'subtitle1', align: 'center'}}
+                                    />
+                                    <CardMedia
+                                        title={menu}
+                                        src={require('../assets/chicken.jpeg')}
+                                        component="img"
+                                        className={classes.media}
+                                    />
+                                    <CardContent className={classes.content}>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', width: '50%', marginLeft: 'auto', marginRight: 'auto'}}>
+                                            <Typography
+                                                variant="h6"
+                                            >
+                                                Menu Ratings
+                                            </Typography>
+                                            <FormGroup row>
+                                                <FormControlLabel
+                                                    control={
+                                                        <Switch
+                                                            checked={checked}
+                                                            onChange={this.handleSwitchChange}
+                                                        />
+                                                    }
+                                                    label={
+                                                        <Typography variant="overline">
+                                                            {checked ? 'Star Ratings' : 'Graph Ratings'}
+                                                        </Typography>
+                                                    }
+                                                    labelPlacement="start"
+                                                >
+                                                </FormControlLabel>
+                                            </FormGroup>
+                                        </div>
+                                        <div className={classes.constraint}>
+                                            {
+                                                checked
+                                            ?
+                                                <MenuStarRatings ratings={rating[menu].ratings}/>
+                                            :
+                                                <ResponsiveContainer width='100%' aspect={2.4}>
+                                                <BarChart
+                                                    layout='vertical'
+                                                    data={chartData}
+                                                    margin={{top: 20, right: 30, left: 20, bottom: 5}}
+                                                >
+                                                <YAxis dataKey="name" type="category"/>
+                                                <XAxis type="number" />
+                                                <Tooltip/>
+                                                <Legend />
+                                                {[1, 2, 3, 4, 5].map(e =>
+                                                    <Bar
+                                                    key={e}
+                                                    dataKey={e}
+                                                    stackId="a"
+                                                    fill={chartPalette[randomIndex][e - 1]}
                                                     />
-                                                }
-                                                label={
-                                                    <Typography variant="overline">
-                                                        {checked ? 'View Star' : 'View Graph'}
-                                                    </Typography>
-                                                }
-                                                labelPlacement="start"
-                                            >
-                                            </FormControlLabel>
-                                        </FormGroup>
-                                    </div>
-                                    <div className={classes.constraint}>
-                                        {
-                                            checked
-                                        ?
-                                            <ResponsiveContainer width='100%' aspect={2.4}>
-                                            <BarChart
-                                                layout='vertical'
-                                                data={chartData}
-                                                margin={{top: 20, right: 30, left: 20, bottom: 5}}
-                                            >
-                                            <YAxis dataKey="name" type="category"/>
-                                            <XAxis type="number" />
-                                            <Tooltip/>
-                                            <Legend />
-                                            {[1, 2, 3, 4, 5].map(e =>
-                                                <Bar
-                                                key={e}
-                                                dataKey={e}
-                                                stackId="a"
-                                                fill={chartPalette[randomIndex][e - 1]}
-                                                />
-                                            )}
-                                            </BarChart>
-                                            </ResponsiveContainer>
-                                        :
-                                            <MenuStarRatings ratings={rating[menu].ratings}/>
-                                        }
-                                    </div>
-                                    <MenuRateDialog onSend={this.handleMenuSend} />
-                                </CardContent>
-                            </Grid>
-                        </Grow>
-                    </Grid>
+                                                )}
+                                                </BarChart>
+                                                </ResponsiveContainer>
+                                            }
+                                        </div>
+                                        <MenuRateDialog onSend={this.handleMenuSend} />
+                                    </CardContent>
+                                </Grid>
+                            </Grow>)
+                            :
+                            null
+                        }
+                        </Grid>
                     <Snackbar
                         anchorOrigin={{
                             vertical: 'bottom',
