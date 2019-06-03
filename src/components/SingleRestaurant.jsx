@@ -199,7 +199,7 @@ class SingleRestaurant extends Component {
         }, { headers })
         .then(res => {
             this.setState({
-                message: 'Rating Successful',
+                message: 'Rating Successfully Sent!',
                 snackbarOpen: true
             })
         })
@@ -213,7 +213,7 @@ class SingleRestaurant extends Component {
 
         if (!taste || !portion || !price) {
             this.setState({
-                message: 'Rating must be between 1~5',
+                message: 'All ratings must be between 1~5',
                 snackbarOpen: true
             })
 
@@ -240,7 +240,7 @@ class SingleRestaurant extends Component {
         }, { headers })
         .then(res => {
             this.setState({
-                message: 'Rating Successful',
+                message: 'Rating Successfully Sent!',
                 snackbarOpen: true
             })
         })

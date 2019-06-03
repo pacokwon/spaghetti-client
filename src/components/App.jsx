@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import Register from './Register.jsx';
 import Login from './Login.jsx';
 import Dashboard from './Dashboard.jsx';
 import ProfileCard from './subcomponents/ProfileCard.jsx';
-import NavBar from './subcomponents/NavBar.jsx';
+import Spaghetti from './Spaghetti.jsx';
 import PreferenceDialog from './subcomponents/PreferenceDialog.jsx'
 
 class App extends Component {
@@ -18,7 +18,7 @@ class App extends Component {
                     <Route exact path='/' component={Dashboard} />
                     <Route exact path='/exc' component={PreferenceDialog} />
                     <Route exact path='/profile' component={ProfileCard} />
-
+                    <Route path="*" component={Spaghetti} />
                 </Switch>
             </BrowserRouter>
         )
