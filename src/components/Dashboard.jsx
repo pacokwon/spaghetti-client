@@ -116,6 +116,7 @@ class Dashboard extends Component {
         const Auth = new AuthHelperMethods();
 
         if (!Auth.loggedIn()) {
+            localStorage.removeItem('id_token');
             console.log('Not Logged In');
             this.props.history.replace('/login');
         } else {

@@ -16,18 +16,8 @@ export default class AuthHelperMethods {
     }
 
     login = (username, password) => {
-        const headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-
-        if (this.loggedIn()) {
-            headers['Authorization'] = "Bearer " + this.getToken();
-        }
-
         return axios('/api/user/login', {
             method: 'POST',
-            headers,
             data: {
                 username,
                 password
@@ -48,8 +38,10 @@ export default class AuthHelperMethods {
     isTokenValid = token => {
         try {
             const decoded = jwt.verify(token, 'keyboard cat');
+            console.log(decoded.exp < Date.now() / 1000);
 
             return decoded.exp > Date.now() / 1000;
+
         } catch (err) {
             return false;
         }
